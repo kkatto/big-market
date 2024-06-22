@@ -11,6 +11,8 @@ import java.math.BigDecimal;
  * @author KouJY
  * Date: 2024/6/15 21:50
  * Package: com.kou.domain.strategy.model.entity
+ *
+ * 策略奖品实体
  */
 @Data
 @Builder

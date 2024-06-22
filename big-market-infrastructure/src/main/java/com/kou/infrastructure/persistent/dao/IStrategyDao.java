@@ -1,5 +1,6 @@
 package com.kou.infrastructure.persistent.dao;
 
+import com.kou.domain.strategy.model.entity.StrategyEntity;
 import com.kou.infrastructure.persistent.po.Strategy;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -15,4 +16,6 @@ import java.util.List;
 public interface IStrategyDao {
 
     List<Strategy> queryStrategyList();
+
+    Strategy queryStrategyByStrategyId(Long strategyId);
 }
