@@ -1,4 +1,4 @@
-package com.kou.domain.strategy.service;
+package com.kou.domain.strategy.service.armory;
 
 /**
  * @author KouJY

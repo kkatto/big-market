@@ -1,7 +1,7 @@
 package com.kou.test.domain;
 
-import com.kou.domain.strategy.service.IStrategyArmory;
-import com.kou.domain.strategy.service.IStrategyDispatch;
+import com.kou.domain.strategy.service.armory.IStrategyArmory;
+import com.kou.domain.strategy.service.armory.IStrategyDispatch;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;

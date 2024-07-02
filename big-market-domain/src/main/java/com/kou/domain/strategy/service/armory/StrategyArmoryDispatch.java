@@ -1,9 +1,11 @@
-package com.kou.domain.strategy.service;
+package com.kou.domain.strategy.service.armory;
 
 import com.kou.domain.strategy.model.entity.StrategyAwardEntity;
 import com.kou.domain.strategy.model.entity.StrategyEntity;
 import com.kou.domain.strategy.model.entity.StrategyRuleEntity;
 import com.kou.domain.strategy.repository.IStrategyRepository;
+import com.kou.domain.strategy.service.armory.IStrategyArmory;
+import com.kou.domain.strategy.service.armory.IStrategyDispatch;
 import com.kou.types.enums.ResponseCode;
 import com.kou.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,7 @@ import java.util.*;
  */
 @Slf4j
 @Service
-public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatch{
+public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatch {
 
     @Resource
     private IStrategyRepository strategyRepository;
