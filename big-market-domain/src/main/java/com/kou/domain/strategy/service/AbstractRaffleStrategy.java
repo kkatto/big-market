@@ -1,4 +1,4 @@
-package com.kou.domain.strategy.service.raffle;
+package com.kou.domain.strategy.service;
 
 import com.kou.domain.strategy.model.entity.RaffleAwardEntity;
 import com.kou.domain.strategy.model.entity.RaffleFactorEntity;
@@ -7,9 +7,8 @@ import com.kou.domain.strategy.model.entity.StrategyEntity;
 import com.kou.domain.strategy.model.valobj.RuleLogicCheckTypeVO;
 import com.kou.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 import com.kou.domain.strategy.repository.IStrategyRepository;
-import com.kou.domain.strategy.service.IRaffleStrategy;
 import com.kou.domain.strategy.service.armory.IStrategyDispatch;
-import com.kou.domain.strategy.service.rule.factory.DefaultLogicFactory;
+import com.kou.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import com.kou.types.enums.ResponseCode;
 import com.kou.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;

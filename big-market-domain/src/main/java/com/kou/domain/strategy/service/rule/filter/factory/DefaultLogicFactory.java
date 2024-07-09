@@ -1,4 +1,4 @@
-package com.kou.domain.strategy.service.rule.factory;
+package com.kou.domain.strategy.service.rule.filter.factory;
 
 import com.kou.domain.strategy.model.entity.RuleActionEntity;
 import com.kou.domain.strategy.service.annotation.LogicStrategy;
@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author KouJY
  * Date: 2024/6/27 10:35
- * Package: com.kou.domain.strategy.service.rule.factory
+ * Package: com.kou.domain.strategy.service.rule.filter.factory
  *
  * 规则工厂
  */

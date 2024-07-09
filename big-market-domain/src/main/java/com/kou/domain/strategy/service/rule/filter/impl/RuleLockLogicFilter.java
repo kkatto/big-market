@@ -1,4 +1,4 @@
-package com.kou.domain.strategy.service.rule.impl;
+package com.kou.domain.strategy.service.rule.filter.impl;
 
 import com.kou.domain.strategy.model.entity.RuleActionEntity;
 import com.kou.domain.strategy.model.entity.RuleMatterEntity;
@@ -6,7 +6,7 @@ import com.kou.domain.strategy.model.valobj.RuleLogicCheckTypeVO;
 import com.kou.domain.strategy.repository.IStrategyRepository;
 import com.kou.domain.strategy.service.annotation.LogicStrategy;
 import com.kou.domain.strategy.service.rule.ILogicFilter;
-import com.kou.domain.strategy.service.rule.factory.DefaultLogicFactory;
+import com.kou.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
