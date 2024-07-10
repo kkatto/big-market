@@ -1,4 +1,4 @@
-package com.kou.domain.strategy.service.rule;
+package com.kou.domain.strategy.service.rule.filter;
 
 import com.kou.domain.strategy.model.entity.RuleActionEntity;
 import com.kou.domain.strategy.model.entity.RuleMatterEntity;

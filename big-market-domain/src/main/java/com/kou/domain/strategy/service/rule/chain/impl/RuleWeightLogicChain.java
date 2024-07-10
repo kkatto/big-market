@@ -44,13 +44,13 @@ public class RuleWeightLogicChain extends AbstractLoginChain {
         String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, ruleModel());
 
         // 1.根据用户ID查询用户抽奖消耗的积分值，本章节我们先写死为固定的值。后续需要从数据库中查询。
-        Map<Long, String> analyticalValueGroup = getAnalyticalValue(ruleValue);
-        if (null == analyticalValueGroup || analyticalValueGroup.isEmpty()) {
+        Map<Long, String> analyticalValueMap = getAnalyticalValue(ruleValue);
+        if (null == analyticalValueMap || analyticalValueMap.isEmpty()) {
             return null;
         }
 
         // 2.转换Keys值，并默认排序
-        List<Long> analyticalSortedKeys = new ArrayList<>(analyticalValueGroup.keySet());
+        List<Long> analyticalSortedKeys = new ArrayList<>(analyticalValueMap.keySet());
         Collections.sort(analyticalSortedKeys);
         Collections.reverse(analyticalSortedKeys);
 
@@ -70,7 +70,7 @@ public class RuleWeightLogicChain extends AbstractLoginChain {
 
         // 4.权重抽奖
         if (null != nextValue) {
-            Integer awardId = strategyDispatch.getRandomAwardId(strategyId, analyticalValueGroup.get(nextValue));
+            Integer awardId = strategyDispatch.getRandomAwardId(strategyId, analyticalValueMap.get(nextValue));
             log.info("抽奖责任链-权重接管 userId: {} strategyId: {} ruleModel: {} awardId: {}", userId, strategyId, ruleModel(), awardId);
             return awardId;
         }
@@ -86,10 +86,10 @@ public class RuleWeightLogicChain extends AbstractLoginChain {
     }
 
     private Map<Long, String> getAnalyticalValue(String ruleValue) {
-        String[] ruleValueGroups = ruleValue.split(Constants.SPACE);
+        String[] ruleValueMaps = ruleValue.split(Constants.SPACE);
         Map<Long, String> ruleValueMap = new HashMap<>();
 
-        for (String ruleValueKey : ruleValueGroups) {
+        for (String ruleValueKey : ruleValueMaps) {
             // 检查输入是否为空
             if (null == ruleValueKey || ruleValueKey.isEmpty()) {
                 return ruleValueMap;

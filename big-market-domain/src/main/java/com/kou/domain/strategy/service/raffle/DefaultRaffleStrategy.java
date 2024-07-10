@@ -7,7 +7,7 @@ import com.kou.domain.strategy.model.valobj.RuleLogicCheckTypeVO;
 import com.kou.domain.strategy.repository.IStrategyRepository;
 import com.kou.domain.strategy.service.AbstractRaffleStrategy;
 import com.kou.domain.strategy.service.armory.IStrategyDispatch;
-import com.kou.domain.strategy.service.rule.ILogicFilter;
+import com.kou.domain.strategy.service.rule.filter.ILogicFilter;
 import com.kou.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,8 +41,8 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
     protected RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> doCheckRaffleBeforeLogic(RaffleFactorEntity raffleFactorEntity, String... logics) {
         if (null == logics || 0 == logics.length) {
             return RuleActionEntity.<RuleActionEntity.RaffleBeforeEntity>builder()
-                    .code(RuleLogicCheckTypeVO.Allow.getCode())
-                    .info(RuleLogicCheckTypeVO.Allow.getInfo())
+                    .code(RuleLogicCheckTypeVO.ALLOW.getCode())
+                    .info(RuleLogicCheckTypeVO.ALLOW.getInfo())
                     .build();
         }
 
@@ -64,7 +64,7 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
 
             RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> ruleActionEntity = logicFilter.filter(ruleMatterEntity);
 
-            if (!RuleLogicCheckTypeVO.Allow.getCode().equals(ruleActionEntity.getCode())) {
+            if (!RuleLogicCheckTypeVO.ALLOW.getCode().equals(ruleActionEntity.getCode())) {
                 return ruleActionEntity;
             }
         }
@@ -87,7 +87,7 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
 
             // 非放行结果则顺序过滤
             log.info("抽奖前规则过滤 userId: {} ruleModel: {} code: {} info: {}", raffleFactorEntity.getUserId(), ruleModel, ruleActionEntity.getCode(), ruleActionEntity.getInfo());
-            if (!RuleLogicCheckTypeVO.Allow.getCode().equals(ruleActionEntity.getCode())) {
+            if (!RuleLogicCheckTypeVO.ALLOW.getCode().equals(ruleActionEntity.getCode())) {
                 return ruleActionEntity;
             }
         }
@@ -99,16 +99,16 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
     protected RuleActionEntity<RuleActionEntity.RaffleCenterEntity> doCheckRaffleCenterLogic(RaffleFactorEntity raffleFactorEntity, String... logics) {
         if (null == logics || 0 == logics.length) {
             return RuleActionEntity.<RuleActionEntity.RaffleCenterEntity>builder()
-                    .code(RuleLogicCheckTypeVO.Allow.getCode())
-                    .info(RuleLogicCheckTypeVO.Allow.getInfo())
+                    .code(RuleLogicCheckTypeVO.ALLOW.getCode())
+                    .info(RuleLogicCheckTypeVO.ALLOW.getInfo())
                     .build();
         }
 
-        Map<String, ILogicFilter<RuleActionEntity.RaffleCenterEntity>> logicFilterGroup = logicFactory.openLogicFilter();
+        Map<String, ILogicFilter<RuleActionEntity.RaffleCenterEntity>> logicFilterMap = logicFactory.openLogicFilter();
 
         RuleActionEntity<RuleActionEntity.RaffleCenterEntity> ruleActionEntity = null;
         for (String ruleModel : logics) {
-            ILogicFilter<RuleActionEntity.RaffleCenterEntity> logicFilter = logicFilterGroup.get(ruleModel);
+            ILogicFilter<RuleActionEntity.RaffleCenterEntity> logicFilter = logicFilterMap.get(ruleModel);
             RuleMatterEntity ruleMatterEntity = new RuleMatterEntity();
             ruleMatterEntity.setStrategyId(raffleFactorEntity.getStrategyId());
             ruleMatterEntity.setUserId(raffleFactorEntity.getUserId());
@@ -117,7 +117,7 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
             ruleActionEntity = logicFilter.filter(ruleMatterEntity);
             // 非放行结果则顺序过滤
             log.info("抽奖中规则过滤 userId: {} ruleModel: {} code: {} info: {}", raffleFactorEntity.getUserId(), ruleModel, ruleActionEntity.getCode(), ruleActionEntity.getInfo());
-            if (!RuleLogicCheckTypeVO.Allow.getCode().equals(ruleActionEntity.getCode())) {
+            if (!RuleLogicCheckTypeVO.ALLOW.getCode().equals(ruleActionEntity.getCode())) {
                 return ruleActionEntity;
             }
         }

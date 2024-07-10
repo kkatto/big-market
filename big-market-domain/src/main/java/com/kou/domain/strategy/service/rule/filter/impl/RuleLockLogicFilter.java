@@ -5,7 +5,7 @@ import com.kou.domain.strategy.model.entity.RuleMatterEntity;
 import com.kou.domain.strategy.model.valobj.RuleLogicCheckTypeVO;
 import com.kou.domain.strategy.repository.IStrategyRepository;
 import com.kou.domain.strategy.service.annotation.LogicStrategy;
-import com.kou.domain.strategy.service.rule.ILogicFilter;
+import com.kou.domain.strategy.service.rule.filter.ILogicFilter;
 import com.kou.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -39,15 +39,15 @@ public class RuleLockLogicFilter implements ILogicFilter<RuleActionEntity.Raffle
         // 用户抽奖次数大于规则限定值，规则放行
         if (userRaffleCount >= raffleCount) {
             return RuleActionEntity.<RuleActionEntity.RaffleCenterEntity>builder()
-                    .code(RuleLogicCheckTypeVO.Allow.getCode())
-                    .info(RuleLogicCheckTypeVO.Allow.getInfo())
+                    .code(RuleLogicCheckTypeVO.ALLOW.getCode())
+                    .info(RuleLogicCheckTypeVO.ALLOW.getInfo())
                     .build();
         }
 
         // 用户抽奖次数小于规则限定值，规则拦截
         return RuleActionEntity.<RuleActionEntity.RaffleCenterEntity>builder()
-                .code(RuleLogicCheckTypeVO.TASK_OVER.getCode())
-                .info(RuleLogicCheckTypeVO.TASK_OVER.getInfo())
+                .code(RuleLogicCheckTypeVO.TAKE_OVER.getCode())
+                .info(RuleLogicCheckTypeVO.TAKE_OVER.getInfo())
                 .build();
     }
 }

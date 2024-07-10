@@ -14,8 +14,8 @@ import lombok.*;
 @NoArgsConstructor
 public class RuleActionEntity<T extends RuleActionEntity.RaffleEntity> {
 
-    private String code = RuleLogicCheckTypeVO.Allow.getCode();
-    private String info = RuleLogicCheckTypeVO.Allow.getInfo();
+    private String code = RuleLogicCheckTypeVO.ALLOW.getCode();
+    private String info = RuleLogicCheckTypeVO.ALLOW.getInfo();
     private String ruleModel;
     private T data;
 

@@ -50,12 +50,12 @@ public class StrategyRuleEntity {
         if (!"rule_weight".equals(this.ruleModel)) {
             return null;
         }
-        String[] ruleValueGroups = this.ruleValue.split(Constants.SPACE);
+        String[] ruleValueMaps = this.ruleValue.split(Constants.SPACE);
         Map<String, List<Integer>> resultMap = new HashMap<>();
 
-        for (String ruleValueGroup : ruleValueGroups) {
+        for (String ruleValueMap : ruleValueMaps) {
             // 检查是否为空
-            if (null == ruleValueGroup || ruleValueGroup.isEmpty()) {
+            if (null == ruleValueMap || ruleValueMap.isEmpty()) {
                 return resultMap;
             }
 
@@ -64,9 +64,9 @@ public class StrategyRuleEntity {
              * String[0]:4000
              * String[1]:102,103,104,105
              */
-            String[] parts = ruleValueGroup.split(Constants.COLON);
+            String[] parts = ruleValueMap.split(Constants.COLON);
             if (parts.length != 2) {
-                throw new IllegalArgumentException("rule_weight rule_rule invalid input format" + ruleValueGroup);
+                throw new IllegalArgumentException("rule_weight rule_rule invalid input format" + ruleValueMap);
             }
 
             // 解析值
@@ -76,7 +76,7 @@ public class StrategyRuleEntity {
                 values.add(Integer.parseInt(valueString));
             }
             // 将键和值放入Map中
-            resultMap.put(ruleValueGroup, values);
+            resultMap.put(ruleValueMap, values);
         }
         return resultMap;
     }

@@ -54,7 +54,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> ruleActionEntity =
                 this.doCheckRaffleBeforeLogic(RaffleFactorEntity.builder().userId(userId).strategyId(strategyId).build(), strategyEntity.ruleModels());
 
-        if (RuleLogicCheckTypeVO.TASK_OVER.getCode().equals(ruleActionEntity.getCode())) {
+        if (RuleLogicCheckTypeVO.TAKE_OVER.getCode().equals(ruleActionEntity.getCode())) {
             if (DefaultLogicFactory.LogicModel.RULE_BLACKLIST.getCode().equals(ruleActionEntity.getRuleModel())) {
                 // 黑名单直接返回固定的奖品ID
                 return RaffleAwardEntity.builder()
@@ -83,7 +83,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
                 .strategyId(strategyId)
                 .awardId(awardId)
                 .build(), strategyAwardRuleModelVO.raffleCenterRuleModelList());
-        if (RuleLogicCheckTypeVO.TASK_OVER.getCode().equals(ruleActionCenterEntity.getCode())) {
+        if (RuleLogicCheckTypeVO.TAKE_OVER.getCode().equals(ruleActionCenterEntity.getCode())) {
             log.info("【临时日志】中奖中规则拦截，通过抽奖后规则 rule_luck_award 走兜底奖励");
             return RaffleAwardEntity.builder()
                     .awardDesc("中奖中规则拦截，通过抽奖后规则 rule_luck_award 走兜底奖励")
