@@ -1,5 +1,7 @@
 package com.kou.domain.strategy.service.rule.chain;
 
+import com.kou.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
+
 /**
  * @author KouJY
  * Date: 2024/7/7 15:27
@@ -15,5 +17,5 @@ public interface ILogicChain extends ILogicChainArmory {
      * @param strategyId    策略ID
      * @return  奖品ID
      */
-    Integer logic(String userId, Long strategyId);
+    DefaultChainFactory.StrategyAwardVO logic(String userId, Long strategyId);
 }

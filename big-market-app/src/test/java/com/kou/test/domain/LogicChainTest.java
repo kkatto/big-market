@@ -1,5 +1,6 @@
 package com.kou.test.domain;
 
+import com.alibaba.fastjson.JSON;
 import com.kou.domain.strategy.service.armory.IStrategyArmory;
 import com.kou.domain.strategy.service.rule.chain.ILogicChain;
 import com.kou.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
@@ -44,8 +45,8 @@ public class LogicChainTest {
     @Test
     public void test_LogicChain_rule_blacklist() {
         ILogicChain logicChain = defaultChainFactory.openLogicChain(100003L);
-        Integer awardId = logicChain.logic("user001", 100003L);
-        log.info("测试结果：{}", awardId);
+        DefaultChainFactory.StrategyAwardVO chainStrategyAwardVO = logicChain.logic("user001", 100003L);
+        log.info("测试结果：{}", JSON.toJSONString(chainStrategyAwardVO));
     }
 
     @Test
@@ -54,14 +55,14 @@ public class LogicChainTest {
         ReflectionTestUtils.setField(ruleWeightLogicChain, "userScore", 4900L);
 
         ILogicChain logicChain = defaultChainFactory.openLogicChain(100001L);
-        Integer awardId = logicChain.logic("xiaokou", 100001L);
-        log.info("测试结果：{}", awardId);
+        DefaultChainFactory.StrategyAwardVO chainStrategyAwardVO = logicChain.logic("xiaokou", 100001L);
+        log.info("测试结果：{}", JSON.toJSONString(chainStrategyAwardVO));
     }
 
     @Test
     public void test_LogicChain_rule_default() {
         ILogicChain logicChain = defaultChainFactory.openLogicChain(100001L);
-        Integer awardId = logicChain.logic("xiaokou", 100001L);
-        log.info("测试结果：{}", awardId);
+        DefaultChainFactory.StrategyAwardVO chainStrategyAwardVO = logicChain.logic("xiaokou", 100001L);
+        log.info("测试结果：{}", JSON.toJSONString(chainStrategyAwardVO));
     }
 }

@@ -24,4 +24,11 @@ public class RuleStockLogicTreeNode implements ILogicTreeNode {
                 .ruleLogicCheckType(RuleLogicCheckTypeVO.TAKE_OVER)
                 .build();
     }
+
+    @Override
+    public String ruleModel() {
+        return "rule_stock";
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.kou.domain.strategy.service.rule.chain.impl;
 
 import com.kou.domain.strategy.repository.IStrategyRepository;
 import com.kou.domain.strategy.service.rule.chain.AbstractLoginChain;
+import com.kou.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
 import com.kou.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.jni.User;
@@ -24,7 +25,7 @@ public class BackListLogicChain extends AbstractLoginChain {
     private IStrategyRepository strategyRepository;
 
     @Override
-    public Integer logic(String userId, Long strategyId) {
+    public DefaultChainFactory.StrategyAwardVO logic(String userId, Long strategyId) {
         log.info("抽奖责任链-黑名单接管开始 userId:{}, strategyId:{}, ruleModel:{}", userId, strategyId, ruleModel());
 
         // 查询规则值配置
@@ -37,7 +38,10 @@ public class BackListLogicChain extends AbstractLoginChain {
         for (String userBlackId : userBlackIds) {
             if (userId.equals(userBlackId)) {
                 log.info("抽奖责任链-黑名单接管 userId: {} strategyId: {} ruleModel: {} awardId: {}", userId, strategyId, ruleModel(), awardId);
-                return awardId;
+                return DefaultChainFactory.StrategyAwardVO.builder()
+                        .awardId(awardId)
+                        .logicModel(ruleModel())
+                        .build();
             }
         }
 
@@ -48,7 +52,7 @@ public class BackListLogicChain extends AbstractLoginChain {
 
     @Override
     protected String ruleModel() {
-        return "rule_blacklist";
+        return DefaultChainFactory.LogicModel.RULE_BLACKLIST.getCode();
     }
 
 }
