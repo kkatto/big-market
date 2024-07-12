@@ -98,7 +98,7 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
              * 用 rateRange 和 awardRate 相乘，就能得到要放多少个奖品id了
              * 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3类似这样的List
              */
-            for (int i = 0; i < rateRange.multiply(awardRate).setScale(0, RoundingMode.CEILING).intValue(); i++) {
+            for (int i = 0; i < rateRange.multiply(awardRate).intValue(); i++) {
                 strategyAwardSearchRateTables.add(awardId);
             }
         }
