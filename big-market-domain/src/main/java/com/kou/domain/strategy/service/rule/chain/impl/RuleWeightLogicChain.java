@@ -47,7 +47,8 @@ public class RuleWeightLogicChain extends AbstractLoginChain {
         // 1.根据用户ID查询用户抽奖消耗的积分值，本章节我们先写死为固定的值。后续需要从数据库中查询。
         Map<Long, String> analyticalValueMap = getAnalyticalValue(ruleValue);
         if (null == analyticalValueMap || analyticalValueMap.isEmpty()) {
-            return null;
+            log.warn("抽奖责任链-权重告警【策略配置权重，但ruleValue未配置相应值】 userId: {} strategyId: {} ruleModel: {}", userId, strategyId, ruleModel());
+            return next().logic(userId, strategyId);
         }
 
         // 2.转换Keys值，并默认排序
