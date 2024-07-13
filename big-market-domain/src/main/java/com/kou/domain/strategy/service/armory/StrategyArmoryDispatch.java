@@ -29,6 +29,7 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
     @Resource
     private IStrategyRepository strategyRepository;
 
+    private final SecureRandom secureRandom = new SecureRandom();
 
     @Override
     public boolean assembleLotteryStrategy(Long strategyId) {
@@ -135,15 +136,20 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
         // 分布式部署下，不一定为当前应用做的策略装配。也就是值不一定会保存到本应用，而是分布式应用，所以需要从 Redis 中获取。
         int rangeRate = strategyRepository.getRangeRate(strategyId);
         // 通过生成的随机值，获取概率值奖品查找表的结果
-        return strategyRepository.getStrategyAwardAssemble(String.valueOf(strategyId), new SecureRandom().nextInt(rangeRate));
+        return strategyRepository.getStrategyAwardAssemble(String.valueOf(strategyId), secureRandom.nextInt(rangeRate));
     }
 
     @Override
     public Integer getRandomAwardId(Long strategyId, String ruleWeightValue) {
         String key = String.valueOf(strategyId).concat("_").concat(ruleWeightValue);
+        return this.getRandomAwardId(key);
+    }
+
+    @Override
+    public Integer getRandomAwardId(String key) {
         // 分布式部署下，不一定为当前应用做的策略装配。也就是值不一定会保存到本应用，而是分布式应用，所以需要从 Redis 中获取。
         int rangeRate = strategyRepository.getRangeRate(key);
         // 通过生成的随机值，获取概率值奖品查找表的结果
-        return strategyRepository.getStrategyAwardAssemble(key, new SecureRandom().nextInt(rangeRate));
+        return strategyRepository.getStrategyAwardAssemble(key, secureRandom.nextInt(rangeRate));
     }
 }
