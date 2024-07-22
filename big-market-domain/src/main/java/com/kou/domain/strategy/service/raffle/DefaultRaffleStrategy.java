@@ -2,6 +2,7 @@ package com.kou.domain.strategy.service.raffle;
 
 import com.kou.domain.strategy.model.valobj.RuleTreeVO;
 import com.kou.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
+import com.kou.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 import com.kou.domain.strategy.repository.IStrategyRepository;
 import com.kou.domain.strategy.service.AbstractRaffleStrategy;
 import com.kou.domain.strategy.service.armory.IStrategyDispatch;
@@ -48,4 +49,13 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
     }
 
 
+    @Override
+    public StrategyAwardStockKeyVO takeQueueValue() {
+        return strategyRepository.takeQueueValue();
+    }
+
+    @Override
+    public void updateStrategyAwardStock(Long strategyId, Integer awardId) {
+        strategyRepository.updateStrategyAwardStock(strategyId, awardId);
+    }
 }

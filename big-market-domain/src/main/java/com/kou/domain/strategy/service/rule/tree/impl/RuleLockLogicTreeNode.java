@@ -23,24 +23,28 @@ public class RuleLockLogicTreeNode implements ILogicTreeNode {
     @Resource
     private IStrategyRepository strategyRepository;
 
-    private Long userCount = 10L;
+    private Long userRaffleCount = 10L;
 
     @Override
-    public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId) {
-        String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, awardId, ruleModel());
+    public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId, String ruleValue) {
+        log.info("规则过滤-次数锁 userId:{} strategyId:{} awardId:{}", userId, strategyId, awardId);
 
-//        if (userCount >= Long.parseLong(ruleValue)) {
-//            return DefaultTreeFactory.TreeActionEntity.builder()
-//                    .ruleLogicCheckType(RuleLogicCheckTypeVO.TAKE_OVER)
-//                    .strategyAwardVO(DefaultTreeFactory.StrategyAwardVO.builder()
-//                            .awardId(awardId)
-//                            .awardRuleValue(ruleValue)
-//                            .build())
-//                    .build();
-//        }
+        long raffleCount = 0L;
+        try {
+            raffleCount = Long.parseLong(ruleValue);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        // 用户抽奖次数大于规则限定值，规则放行
+        if (userRaffleCount >= raffleCount) {
+            return DefaultTreeFactory.TreeActionEntity.builder()
+                    .ruleLogicCheckType(RuleLogicCheckTypeVO.ALLOW)
+                    .build();
+        }
 
         return DefaultTreeFactory.TreeActionEntity.builder()
-                .ruleLogicCheckType(RuleLogicCheckTypeVO.ALLOW)
+                .ruleLogicCheckType(RuleLogicCheckTypeVO.TAKE_OVER)
                 .build();
     }
 
