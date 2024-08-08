@@ -2,6 +2,8 @@ package com.kou.infrastructure.persistent.redis;
 
 import org.redisson.api.*;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author KouJY
  * Date: 2024/6/15 21:18
@@ -262,6 +264,7 @@ public interface IRedisService {
      */
     <T> RBloomFilter<T> getBloomFilter(String key);
 
-
     Boolean setNx(String lockKey);
+
+    Boolean setNx(String key, long expired, TimeUnit timeUnit);
 }
