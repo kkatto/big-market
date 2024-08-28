@@ -18,6 +18,8 @@ import java.util.Date;
  * @author KouJY
  * Date: 2024/8/27 15:56
  * Package: com.kou.domain.activity.service.partake
+ *
+ * 抽奖活动参与抽奖类
  */
 @Slf4j
 public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPartakeService {
