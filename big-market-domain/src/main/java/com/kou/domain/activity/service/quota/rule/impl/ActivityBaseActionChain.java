@@ -1,11 +1,10 @@
-package com.kou.domain.activity.service.rule.impl;
+package com.kou.domain.activity.service.quota.rule.impl;
 
 import com.kou.domain.activity.model.entity.ActivityCountEntity;
 import com.kou.domain.activity.model.entity.ActivityEntity;
 import com.kou.domain.activity.model.entity.ActivitySkuEntity;
 import com.kou.domain.activity.model.valobj.ActivityStateVO;
-import com.kou.domain.activity.service.rule.AbstractActionChain;
-import com.kou.types.common.Constants;
+import com.kou.domain.activity.service.quota.rule.AbstractActionChain;
 import com.kou.types.enums.ResponseCode;
 import com.kou.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;

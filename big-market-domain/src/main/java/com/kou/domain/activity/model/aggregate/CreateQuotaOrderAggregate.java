@@ -1,6 +1,5 @@
 package com.kou.domain.activity.model.aggregate;
 
-import com.kou.domain.activity.model.entity.ActivityAccountEntity;
 import com.kou.domain.activity.model.entity.ActivityOrderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,13 +11,13 @@ import lombok.NoArgsConstructor;
  * Date: 2024/8/2 15:07
  * Package: com.kou.domain.activity.model.aggregate
  *
- * 下单聚合对象
+ * 账户额度下单聚合对象
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateOrderAggregate {
+public class CreateQuotaOrderAggregate {
 
     /**
      * 用户ID

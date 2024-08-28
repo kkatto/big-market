@@ -1,27 +1,23 @@
-package com.kou.infrastructure.persistent.po;
+package com.kou.domain.activity.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 /**
  * @author KouJY
- * Date: 2024/8/8 14:26
- * Package: com.kou.infrastructure.persistent.po
+ * Date: 2024/8/27 15:51
+ * Package: com.kou.domain.activity.model.entity
  *
- * 抽奖活动账户表-日次数
+ * 活动账户（日）实体对象
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RaffleActivityAccountDay {
+public class ActivityAccountDayEntity {
 
-    /** 自增ID */
-    private String id;
     /** 用户ID */
     private String userId;
     /** 活动ID */
@@ -32,8 +28,4 @@ public class RaffleActivityAccountDay {
     private Integer dayCount;
     /** 日次数-剩余 */
     private Integer dayCountSurplus;
-    /** 创建时间 */
-    private Date createTime;
-    /** 更新时间 */
-    private Date updateTime;
 }

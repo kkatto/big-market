@@ -1,23 +1,23 @@
-package com.kou.domain.activity.service;
+package com.kou.domain.activity.service.quota;
 
 import com.kou.domain.activity.model.entity.ActivityCountEntity;
 import com.kou.domain.activity.model.entity.ActivityEntity;
 import com.kou.domain.activity.model.entity.ActivitySkuEntity;
 import com.kou.domain.activity.repository.IActivityRepository;
-import com.kou.domain.activity.service.rule.factory.DefaultActivityChainFactory;
+import com.kou.domain.activity.service.quota.rule.factory.DefaultActivityChainFactory;
 
 /**
  * @author KouJY
  * Date: 2024/8/2 22:08
  * Package: com.kou.domain.activity.service.rule
  */
-public class RaffleActivitySupport {
+public class RaffleActivityAccountQuotaSupport {
 
     protected DefaultActivityChainFactory defaultActivityChainFactory;
 
     protected IActivityRepository activityRepository;
 
-    public RaffleActivitySupport(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
+    public RaffleActivityAccountQuotaSupport(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
         this.activityRepository = activityRepository;
         this.defaultActivityChainFactory = defaultActivityChainFactory;
     }

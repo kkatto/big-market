@@ -1,7 +1,7 @@
 package com.kou.test.domain.activity;
 
 import com.kou.domain.activity.model.entity.SkuRechargeEntity;
-import com.kou.domain.activity.service.IRaffleOrder;
+import com.kou.domain.activity.service.IRaffleActivityAccountQuotaService;
 import com.kou.domain.activity.service.armory.IActivityArmory;
 import com.kou.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
@@ -20,15 +20,15 @@ import java.util.concurrent.CountDownLatch;
  * Date: 2024/8/2 17:05
  * Package: com.kou.test.domain.activity
  *
- * 抽奖活动订单单测
+ * 抽奖活动参与服务测试
  */
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RaffleOrderTest {
+public class RaffleActivityAccountQuotaServiceTest {
 
     @Resource
-    private IRaffleOrder raffleOrder;
+    private IRaffleActivityAccountQuotaService raffleOrder;
     @Resource
     private IActivityArmory activityArmory;
 

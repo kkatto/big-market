@@ -1,16 +1,15 @@
-package com.kou.domain.activity.service;
+package com.kou.domain.activity.service.quota;
 
-import com.kou.domain.activity.model.aggregate.CreateOrderAggregate;
+import com.kou.domain.activity.model.aggregate.CreateQuotaOrderAggregate;
 import com.kou.domain.activity.model.entity.*;
 import com.kou.domain.activity.repository.IActivityRepository;
-import com.kou.domain.activity.service.rule.IActionChain;
-import com.kou.domain.activity.service.rule.factory.DefaultActivityChainFactory;
+import com.kou.domain.activity.service.IRaffleActivityAccountQuotaService;
+import com.kou.domain.activity.service.quota.rule.IActionChain;
+import com.kou.domain.activity.service.quota.rule.factory.DefaultActivityChainFactory;
 import com.kou.types.enums.ResponseCode;
 import com.kou.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-
-import javax.annotation.Resource;
 
 /**
  * @author KouJY
@@ -18,9 +17,9 @@ import javax.annotation.Resource;
  * Package: com.kou.domain.activity.service
  */
 @Slf4j
-public abstract class AbstractRaffleActivity extends RaffleActivitySupport implements IRaffleOrder{
+public abstract class AbstractRaffleActivityAccountQuota extends RaffleActivityAccountQuotaSupport implements IRaffleActivityAccountQuotaService {
 
-    public AbstractRaffleActivity(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
+    public AbstractRaffleActivityAccountQuota(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
         super(activityRepository, defaultActivityChainFactory);
     }
 
@@ -47,17 +46,17 @@ public abstract class AbstractRaffleActivity extends RaffleActivitySupport imple
         actionChain.action(activityEntity, activityCountEntity, activitySkuEntity);
 
         // 4. 构建订单聚合对象
-        CreateOrderAggregate createOrderAggregate = buildOrderAggregate(skuRechargeEntity, activityEntity, activityCountEntity, activitySkuEntity);
+        CreateQuotaOrderAggregate createQuotaOrderAggregate = buildOrderAggregate(skuRechargeEntity, activityEntity, activityCountEntity, activitySkuEntity);
 
         // 5. 保存订单信息
-        doSaveOrder(createOrderAggregate);
+        doSaveOrder(createQuotaOrderAggregate);
 
         // 6. 返回订单结果
-        return createOrderAggregate.getActivityOrderEntity().getOrderId();
+        return createQuotaOrderAggregate.getActivityOrderEntity().getOrderId();
     }
 
-    protected abstract CreateOrderAggregate buildOrderAggregate(SkuRechargeEntity skuRechargeEntity, ActivityEntity activityEntity, ActivityCountEntity activityCountEntity, ActivitySkuEntity activitySkuEntity);
+    protected abstract CreateQuotaOrderAggregate buildOrderAggregate(SkuRechargeEntity skuRechargeEntity, ActivityEntity activityEntity, ActivityCountEntity activityCountEntity, ActivitySkuEntity activitySkuEntity);
 
-    protected abstract void doSaveOrder(CreateOrderAggregate createOrderAggregate);
+    protected abstract void doSaveOrder(CreateQuotaOrderAggregate createQuotaOrderAggregate);
 
 }
