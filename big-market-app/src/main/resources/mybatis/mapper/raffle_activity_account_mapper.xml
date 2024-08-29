@@ -21,8 +21,8 @@
         (user_id, activity_id, total_count, total_count_surplus, day_count,
          day_count_surplus, month_count, month_count_surplus, create_time, update_time)
         values
-            (#{userId}, #{activityId}, #{totalCount}, #{totalCountSurplus}, #{dayCount},
-             #{dayCountSurplus}, #{monthCount}, #{monthCountSurplus}, now(), now())
+        (#{userId}, #{activityId}, #{totalCount}, #{totalCountSurplus}, #{dayCount},
+         #{dayCountSurplus}, #{monthCount}, #{monthCountSurplus}, now(), now())
     </insert>
 
     <update id="updateAccountQuota" parameterType="com.kou.infrastructure.persistent.po.RaffleActivityAccount">
