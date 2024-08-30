@@ -23,8 +23,6 @@ public class RuleLockLogicTreeNode implements ILogicTreeNode {
     @Resource
     private IStrategyRepository strategyRepository;
 
-    private Long userRaffleCount = 10L;
-
     @Override
     public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId, String ruleValue) {
         log.info("规则过滤-次数锁 userId:{} strategyId:{} awardId:{}", userId, strategyId, awardId);
@@ -35,6 +33,9 @@ public class RuleLockLogicTreeNode implements ILogicTreeNode {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
+
+        // 查询用户抽奖次数 - 当天的；策略ID:活动ID 1:1 的配置，可以直接用 strategyId 查询。
+        Integer userRaffleCount = strategyRepository.queryTodayUserRaffleCount(userId, strategyId);
 
         // 用户抽奖次数大于规则限定值，规则放行
         if (userRaffleCount >= raffleCount) {

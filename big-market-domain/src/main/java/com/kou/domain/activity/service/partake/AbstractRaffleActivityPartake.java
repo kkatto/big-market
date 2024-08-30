@@ -31,7 +31,15 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
     }
 
     @Override
-    public UserRaffleOrderEntity createOrder(PartakeRaffleActivityEntity partakeRaffleActivityEntity) {
+    public UserRaffleOrderEntity createUserRaffleOrder(String userId, Long activityId) {
+        return createUserRaffleOrder(PartakeRaffleActivityEntity.builder()
+                .userId(userId)
+                .activityId(activityId)
+                .build());
+    }
+
+    @Override
+    public UserRaffleOrderEntity createUserRaffleOrder(PartakeRaffleActivityEntity partakeRaffleActivityEntity) {
         // 0.基础信息
         String userId = partakeRaffleActivityEntity.getUserId();
         Long activityId = partakeRaffleActivityEntity.getActivityId();

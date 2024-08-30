@@ -34,7 +34,7 @@ public class RaffleActivityPartakeServiceTest {
         partakeRaffleActivityEntity.setUserId("xiaokou");
         partakeRaffleActivityEntity.setActivityId(100301L);
         // 调用接口
-        UserRaffleOrderEntity userRaffleOrder = raffleActivityPartakeService.createOrder(partakeRaffleActivityEntity);
+        UserRaffleOrderEntity userRaffleOrder = raffleActivityPartakeService.createUserRaffleOrder(partakeRaffleActivityEntity);
         log.info("请求参数：{}", JSON.toJSONString(partakeRaffleActivityEntity));
         log.info("测试结果：{}", JSON.toJSONString(userRaffleOrder));
     }
