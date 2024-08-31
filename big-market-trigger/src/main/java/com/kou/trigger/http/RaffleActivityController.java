@@ -27,7 +27,7 @@ import java.util.Date;
  * @author KouJY
  * Date: 2024/8/29 14:35
  * Package: com.kou.trigger.http
- *
+ * <p>
  * 抽奖活动服务 注意；在不引用 application/case 层的时候，就需要让接口实现层来做领域的串联。一些较大规模的系统，需要加入 case 层
  */
 @Slf4j
@@ -55,9 +55,9 @@ public class RaffleActivityController implements IRaffleActivityService {
      * <p>
      * 接口：<a href="http://localhost:8091/api/v1/raffle/activity/armory">/api/v1/raffle/activity/armory</a>
      * 入参：{"activityId":100001,"userId":"xiaokou"}
-     *
+     * <p>
      * curl --request GET \
-     *   --url 'http://localhost:8091/api/v1/raffle/activity/armory?activityId=100301'
+     * --url 'http://localhost:8091/api/v1/raffle/activity/armory?activityId=100301'
      */
     @RequestMapping(value = "armory", method = RequestMethod.GET)
     @Override
@@ -92,13 +92,13 @@ public class RaffleActivityController implements IRaffleActivityService {
      * <p>
      * 接口：<a href="http://localhost:8091/api/v1/raffle/activity/draw">/api/v1/raffle/activity/draw</a>
      * 入参：{"activityId":100001,"userId":"xiaokou"}
-     *
+     * <p>
      * curl --request POST \
-     *   --url http://localhost:8091/api/v1/raffle/activity/draw \
-     *   --header 'content-type: application/json' \
-     *   --data '{
-     *     "userId":"xiaokou",
-     *     "activityId": 100301
+     * --url http://localhost:8091/api/v1/raffle/activity/draw \
+     * --header 'content-type: application/json' \
+     * --data '{
+     * "userId":"xiaokou",
+     * "activityId": 100301
      * }'
      */
     @RequestMapping(value = "draw", method = RequestMethod.POST)
@@ -116,7 +116,9 @@ public class RaffleActivityController implements IRaffleActivityService {
             // 3.抽奖策略 - 执行抽奖
             RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(RaffleFactorEntity.builder()
                     .userId(request.getUserId())
-                    .strategyId(userRaffleOrderEntity.getStrategyId()).build());
+                    .strategyId(userRaffleOrderEntity.getStrategyId())
+                    .endDateTime(userRaffleOrderEntity.getEndDateTime())
+                    .build());
             // 4.存放结果 - 写入中奖记录
             UserAwardRecordEntity userAwardRecordEntity = UserAwardRecordEntity.builder()
                     .userId(request.getUserId())

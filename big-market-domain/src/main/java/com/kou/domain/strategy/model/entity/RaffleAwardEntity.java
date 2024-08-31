@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
  * @author KouJY
  * Date: 2024/6/26 16:07
@@ -26,4 +28,6 @@ public class RaffleAwardEntity {
     private String awardConfig;
     /** 奖品顺序号 */
     private Integer sort;
+    /** 结束时间 */
+    private Date endDateTime;
 }
