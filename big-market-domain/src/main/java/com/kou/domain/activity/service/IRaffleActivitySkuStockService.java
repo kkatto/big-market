@@ -2,6 +2,8 @@ package com.kou.domain.activity.service;
 
 import com.kou.domain.activity.model.valobj.ActivitySkuStockKeyVO;
 
+import java.util.List;
+
 /**
  * @author KouJY
  * Date: 2024/8/7 17:56
@@ -17,12 +19,12 @@ public interface IRaffleActivitySkuStockService {
      * @return 奖品库存Key信息
      * @throws InterruptedException 异常
      */
-    ActivitySkuStockKeyVO takeQueueValue() throws InterruptedException;
+    ActivitySkuStockKeyVO takeQueueValue(Long sku) throws InterruptedException;
 
     /**
      * 清空队列
      */
-    void clearQueueValue();
+    void clearQueueValue(Long sku);
 
     /**
      * 延迟队列 + 任务趋势更新活动sku库存
@@ -37,4 +39,9 @@ public interface IRaffleActivitySkuStockService {
      * @param sku 活动商品
      */
     void clearActivitySkuStock(Long sku);
+
+    /**
+     * 获取Sku列表
+     */
+    List<Long> querySkuList();
 }
