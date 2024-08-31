@@ -7,6 +7,7 @@ import com.kou.domain.strategy.model.valobj.RuleTreeVO;
 import com.kou.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 import com.kou.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +65,15 @@ public interface IStrategyRepository {
     Boolean subtractionAwardStock(String cacheKey);
 
     /**
+     * 缓存key，decr 方式扣减库存
+     *
+     * @param cacheKey 缓存Key
+     * @param endDateTime 活动结束时间
+     * @return 扣减结果
+     */
+    Boolean subtractionAwardStock(String cacheKey, Date endDateTime);
+
+    /**
      * 写入奖品库存消费队列
      *
      * @param strategyAwardStockKeyVO 对象值对象
@@ -111,4 +121,12 @@ public interface IStrategyRepository {
      * @return 用户今日参与次数
      */
     Integer queryTodayUserRaffleCount(String userId, Long strategyId);
+
+    /**
+     * 根据规则树ID集合查询奖品中加锁数量的配置「部分奖品需要抽奖N次解锁」
+     *
+     * @param treeIds 规则树ID值
+     * @return key 规则树，value rule_lock 加锁值
+     */
+    Map<String, Integer> queryAwardRuleLockCount(String... treeIds);
 }

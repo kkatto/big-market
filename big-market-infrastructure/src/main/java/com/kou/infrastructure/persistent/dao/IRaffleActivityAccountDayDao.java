@@ -1,5 +1,6 @@
 package com.kou.infrastructure.persistent.dao;
 
+import com.kou.domain.activity.model.entity.ActivityAccountDayEntity;
 import com.kou.infrastructure.persistent.po.RaffleActivityAccountDay;
 import com.kou.middleware.db.router.annotation.DBRouter;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,4 +22,6 @@ public interface IRaffleActivityAccountDayDao {
 
     void insertActivityAccountDay(RaffleActivityAccountDay raffleActivityAccountDay);
 
+    @DBRouter
+    Integer queryRaffleActivityAccountDayPartakeCount(RaffleActivityAccountDay raffleActivityAccountDayReq);
 }
