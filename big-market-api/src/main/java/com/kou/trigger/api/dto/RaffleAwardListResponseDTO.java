@@ -31,5 +31,5 @@ public class RaffleAwardListResponseDTO {
     /** 奖品是否解锁 - true 已解锁、false 未解锁 */
     private boolean hasAwardUnlock;
     /** 等待解锁次数 - 规定的抽奖N次解锁减去用户已经抽奖次数 */
-    private Integer waitUnlockCount;
+    private Integer waitUnLockCount;
 }

@@ -119,7 +119,7 @@ public class RaffleStrategyController implements IRaffleStrategyService {
                         .sort(strategyAwardEntity.getSort())
                         .awardRuleLockCount(awardRuleLockCount)
                         .hasAwardUnlock(null == awardRuleLockCount || dayPartakeCount >= awardRuleLockCount)
-                        .waitUnlockCount(null == awardRuleLockCount || awardRuleLockCount <= dayPartakeCount ? 0 : awardRuleLockCount - dayPartakeCount)
+                        .waitUnLockCount(null == awardRuleLockCount || awardRuleLockCount <= dayPartakeCount ? 0 : awardRuleLockCount - dayPartakeCount)
                         .build());
             }
             Response<List<RaffleAwardListResponseDTO>> response = Response.<List<RaffleAwardListResponseDTO>>builder()
