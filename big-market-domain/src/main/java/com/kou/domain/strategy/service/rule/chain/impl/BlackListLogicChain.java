@@ -5,7 +5,6 @@ import com.kou.domain.strategy.service.rule.chain.AbstractLoginChain;
 import com.kou.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
 import com.kou.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.User;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -19,7 +18,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component(value = "rule_blacklist")
-public class BackListLogicChain extends AbstractLoginChain {
+public class BlackListLogicChain extends AbstractLoginChain {
 
     @Resource
     private IStrategyRepository strategyRepository;
