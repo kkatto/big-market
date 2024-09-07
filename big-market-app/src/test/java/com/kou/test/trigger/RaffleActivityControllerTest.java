@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.kou.trigger.api.IRaffleActivityService;
 import com.kou.trigger.api.dto.ActivityDrawRequestDTO;
 import com.kou.trigger.api.dto.ActivityDrawResponseDTO;
+import com.kou.trigger.api.dto.UserActivityAccountRequestDTO;
+import com.kou.trigger.api.dto.UserActivityAccountResponseDTO;
 import com.kou.types.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -34,7 +36,7 @@ public class RaffleActivityControllerTest {
 
     @Test
     public void test_draw() {
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 1; i++) {
             ActivityDrawRequestDTO request = new ActivityDrawRequestDTO();
             request.setActivityId(100301L);
             request.setUserId("xiaofuge");
@@ -47,7 +49,26 @@ public class RaffleActivityControllerTest {
 
     @Test
     public void test_calendarSignRebate(){
-        Response<Boolean> response = raffleActivityService.calendarSignRebate("xiaokou");
+        Response<Boolean> response = raffleActivityService.calendarSignRebate("xiaofuge");
+        log.info("测试结果：{}", JSON.toJSONString(response));
+    }
+
+    @Test
+    public void test_hasCalendarSignRebate() {
+        Response<Boolean> response = raffleActivityService.hasCalendarSignRebate("xiaofuge");
+        log.info("测试结果：{}", JSON.toJSONString(response));
+    }
+
+    @Test
+    public void test_queryUserActivityAccount() {
+        UserActivityAccountRequestDTO request = new UserActivityAccountRequestDTO();
+        request.setActivityId(100301L);
+        request.setUserId("xiaofuge");
+
+        // 查询数据
+        Response<UserActivityAccountResponseDTO> response = raffleActivityService.queryUserActivityAccount(request);
+
+        log.info("请求参数：{}", JSON.toJSONString(request));
         log.info("测试结果：{}", JSON.toJSONString(response));
     }
 }

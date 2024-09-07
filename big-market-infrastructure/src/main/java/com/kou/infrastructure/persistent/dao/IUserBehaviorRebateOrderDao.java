@@ -1,8 +1,11 @@
 package com.kou.infrastructure.persistent.dao;
 
 import com.kou.infrastructure.persistent.po.UserBehaviorRebateOrder;
+import com.kou.middleware.db.router.annotation.DBRouter;
 import com.kou.middleware.db.router.annotation.DBRouterStrategy;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @author KouJY
@@ -17,4 +20,6 @@ public interface IUserBehaviorRebateOrderDao {
 
     void insert(UserBehaviorRebateOrder userBehaviorRebateOrder);
 
+    @DBRouter
+    List<UserBehaviorRebateOrder> queryOrderByOutBusinessNo(UserBehaviorRebateOrder userBehaviorRebateOrder);
 }

@@ -26,9 +26,6 @@ public class RuleWeightLogicChain extends AbstractLoginChain {
     @Resource
     private IStrategyDispatch strategyDispatch;
 
-    // 根据用户ID查询用户抽奖消耗的积分值，本章节我们先写死为固定的值。后续需要从数据库中查询。
-    public Long userScore = 0L;
-
     /**
      * 权重规则过滤；
      * 1. 权重规则格式；4000:102,103,104,105 5000:102,103,104,105,106,107 6000:102,103,104,105,106,107,108,109
@@ -65,6 +62,8 @@ public class RuleWeightLogicChain extends AbstractLoginChain {
          *       }
          *   }
          */
+        // 根据用户ID查询用户抽奖消耗的积分值，本章节我们先写死为固定的值。后续需要从数据库中查询。
+        Integer userScore = strategyRepository.queryActivityAccountTotalUseCount(userId, strategyId);
         Long nextValue = analyticalSortedKeys.stream()
                 .filter(analyticalSortedKeyValue -> userScore >= analyticalSortedKeyValue)
                 .findFirst()

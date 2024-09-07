@@ -3,7 +3,9 @@ package com.kou.test.domain.strategy;
 import com.alibaba.fastjson.JSON;
 import com.kou.domain.strategy.model.entity.RaffleAwardEntity;
 import com.kou.domain.strategy.model.entity.RaffleFactorEntity;
+import com.kou.domain.strategy.model.valobj.RuleWeightVO;
 import com.kou.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
+import com.kou.domain.strategy.service.IRaffleRule;
 import com.kou.domain.strategy.service.IRaffleStock;
 import com.kou.domain.strategy.service.IRaffleStrategy;
 import com.kou.domain.strategy.service.armory.IStrategyArmory;
@@ -18,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -42,6 +45,8 @@ public class RaffleStrategyTest {
     private RuleLockLogicTreeNode ruleLockLogicTreeNode;
     @Resource
     private IRaffleStock raffleStock;
+    @Resource
+    private IRaffleRule raffleRule;
 
 
     @Before
@@ -53,8 +58,8 @@ public class RaffleStrategyTest {
         log.info("测试结果：{}", strategyArmory.assembleLotteryStrategy(100006L));
 
         // 通过反射 mock 规则中的值
-        ReflectionTestUtils.setField(RuleWeightLogicChain, "userScore", 40500L);
-        ReflectionTestUtils.setField(ruleLockLogicTreeNode, "userRaffleCount", 10L);
+        //ReflectionTestUtils.setField(RuleWeightLogicChain, "userScore", 40500L);
+        //ReflectionTestUtils.setField(ruleLockLogicTreeNode, "userRaffleCount", 10L);
 
     }
 
@@ -110,6 +115,12 @@ public class RaffleStrategyTest {
     public void test_takeQueueValue() throws InterruptedException {
         StrategyAwardStockKeyVO strategyAwardStockKeyVO = raffleStock.takeQueueValue();
         log.info("测试结果：{}", JSON.toJSONString(strategyAwardStockKeyVO));
+    }
+
+    @Test
+    public void test_raffleRule() {
+        List<RuleWeightVO> ruleWeightVOS = raffleRule.queryAwardRuleWeightByActivityId(100301L);
+        log.info("测试结果：{}", JSON.toJSONString(ruleWeightVOS));
     }
 
 }
