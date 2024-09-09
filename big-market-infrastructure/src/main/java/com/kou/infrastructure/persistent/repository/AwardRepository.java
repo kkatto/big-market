@@ -14,16 +14,20 @@ import com.kou.infrastructure.persistent.po.Task;
 import com.kou.infrastructure.persistent.po.UserAwardRecord;
 import com.kou.infrastructure.persistent.po.UserCreditAccount;
 import com.kou.infrastructure.persistent.po.UserRaffleOrder;
+import com.kou.infrastructure.persistent.redis.IRedisService;
 import com.kou.middleware.db.router.annotation.DBRouterStrategy;
 import com.kou.middleware.db.router.strategy.IDBRouterStrategy;
+import com.kou.types.common.Constants;
 import com.kou.types.enums.ResponseCode;
 import com.kou.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author KouJY
@@ -52,6 +56,8 @@ public class AwardRepository implements IAwardRepository {
     private TransactionTemplate transactionTemplate;
     @Resource
     private EventPublisher eventPublisher;
+    @Resource
+    private IRedisService redisService;
 
     @Override
     public void saveUserAwardRecord(UserAwardRecordAggregate userAwardRecordAggregate) {
@@ -132,32 +138,39 @@ public class AwardRepository implements IAwardRepository {
         UserCreditAwardEntity userCreditAwardEntity = giveOutPrizesAggregate.getUserCreditAwardEntity();
 
         // 更新发奖记录
-        UserAwardRecord userAwardRecord = new UserAwardRecord();
-        userAwardRecord.setUserId(userId);
-        userAwardRecord.setOrderId(userAwardRecordEntity.getOrderId());
-        userAwardRecord.setAwardState(userAwardRecordEntity.getAwardState().getCode());
+        UserAwardRecord userAwardRecordReq = new UserAwardRecord();
+        userAwardRecordReq.setUserId(userId);
+        userAwardRecordReq.setOrderId(userAwardRecordEntity.getOrderId());
+        userAwardRecordReq.setAwardState(userAwardRecordEntity.getAwardState().getCode());
 
         // 更新用户积分
-        UserCreditAccount userCreditAccount = new UserCreditAccount();
-        userCreditAccount.setUserId(userCreditAwardEntity.getUserId());
-        userCreditAccount.setTotalAmount(userCreditAwardEntity.getCreditAmount());
-        userCreditAccount.setAvailableAmount(userCreditAwardEntity.getCreditAmount());
-        userCreditAccount.setAccountStatus(AccountStatusVO.open.getCode());
+        UserCreditAccount userCreditAccountReq = new UserCreditAccount();
+        userCreditAccountReq.setUserId(userCreditAwardEntity.getUserId());
+        userCreditAccountReq.setTotalAmount(userCreditAwardEntity.getCreditAmount());
+        userCreditAccountReq.setAvailableAmount(userCreditAwardEntity.getCreditAmount());
+        userCreditAccountReq.setAccountStatus(AccountStatusVO.open.getCode());
 
+        RLock lock = redisService.getLock(Constants.RedisKey.ACTIVITY_ACCOUNT_LOCK + userId);
         try {
+            lock.lock(3, TimeUnit.SECONDS);
             dbRouterStrategy.doRouter(userId);
             transactionTemplate.execute(status -> {
                try {
-                    int updateAccountCount = userCreditAccountDao.updateAndAmount(userCreditAccount);
-                    if (0 == updateAccountCount) {
-                        userCreditAccountDao.insert(userCreditAccount);
-                    }
+                   // 更新积分 || 创建积分账户
+                   UserCreditAccount userCreditAccountRes = userCreditAccountDao.queryUserCreditAccount(userCreditAccountReq);
+                   if (null == userCreditAccountRes) {
+                       userCreditAccountDao.insert(userCreditAccountReq);
+                   }
+                   else {
+                       userCreditAccountDao.updateAndAmount(userCreditAccountReq);
+                   }
 
-                    int updateAwardCount = userAwardRecordDao.updateAwardRecordCompletedState(userAwardRecord);
-                    if (0 == updateAwardCount) {
-                        log.warn("更新中奖记录，重复更新拦截 userId:{} giveOutPrizesAggregate:{}", userId, JSON.toJSONString(giveOutPrizesAggregate));
-                        status.setRollbackOnly();
-                    }
+                   // 更新奖品记录
+                   int updateAwardCount = userAwardRecordDao.updateAwardRecordCompletedState(userAwardRecordReq);
+                   if (0 == updateAwardCount) {
+                       log.warn("更新中奖记录，重复更新拦截 userId:{} giveOutPrizesAggregate:{}", userId, JSON.toJSONString(giveOutPrizesAggregate));
+                       status.setRollbackOnly();
+                   }
                } catch (DuplicateKeyException e) {
                    status.setRollbackOnly();
                    log.error("更新中奖记录，唯一索引冲突 userId: {} ", userId, e);
