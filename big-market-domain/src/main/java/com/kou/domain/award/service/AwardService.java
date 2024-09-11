@@ -60,6 +60,8 @@ public class AwardService implements IAwardService {
         userAwardRecordAggregate.setTaskEntity(taskEntity);
 
         awardRepository.saveUserAwardRecord(userAwardRecordAggregate);
+
+        log.info("中奖记录保存完成 userId:{} orderId:{}", userAwardRecordEntity.getUserId(), userAwardRecordEntity.getOrderId());
     }
 
     @Override

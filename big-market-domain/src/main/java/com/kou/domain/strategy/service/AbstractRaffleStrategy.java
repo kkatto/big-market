@@ -48,6 +48,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         if (null == strategyId || StringUtils.isBlank(userId)) {
             throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
         }
+        log.info("抽奖策略计算 userId:{} strategyId:{}", userId, strategyId);
 
         // 2.责任链
         DefaultChainFactory.StrategyAwardVO chainStrategyAwardVO = raffleLogicChain(userId, strategyId);

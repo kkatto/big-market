@@ -6,6 +6,8 @@ import com.kou.domain.strategy.service.rule.chain.AbstractLoginChain;
 import com.kou.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
 import com.kou.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -15,9 +17,12 @@ import java.util.*;
  * @author KouJY
  * Date: 2024/7/7 16:25
  * Package: com.kou.domain.strategy.service.rule.chain.impl
+ *
+ * 权重抽奖责任链
  */
 @Slf4j
 @Component(value = "rule_weight")
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RuleWeightLogicChain extends AbstractLoginChain {
 
     @Resource
@@ -44,7 +49,7 @@ public class RuleWeightLogicChain extends AbstractLoginChain {
         // 1.根据用户ID查询用户抽奖消耗的积分值，本章节我们先写死为固定的值。后续需要从数据库中查询。
         Map<Long, String> analyticalValueMap = getAnalyticalValue(ruleValue);
         if (null == analyticalValueMap || analyticalValueMap.isEmpty()) {
-            log.warn("抽奖责任链-权重告警【策略配置权重，但ruleValue未配置相应值】 userId: {} strategyId: {} ruleModel: {}", userId, strategyId, ruleModel());
+            log.warn("抽奖责任链-权重告警【策略配置权重，但ruleValue未配置相应值】 userId:{} strategyId:{} ruleModel:{}", userId, strategyId, ruleModel());
             return next().logic(userId, strategyId);
         }
 
@@ -72,7 +77,7 @@ public class RuleWeightLogicChain extends AbstractLoginChain {
         // 4.权重抽奖
         if (null != nextValue) {
             Integer awardId = strategyDispatch.getRandomAwardId(strategyId, analyticalValueMap.get(nextValue));
-            log.info("抽奖责任链-权重接管 userId: {} strategyId: {} ruleModel: {} awardId: {}", userId, strategyId, ruleModel(), awardId);
+            log.info("抽奖责任链-权重接管 userId:{} strategyId:{} ruleModel:{} awardId:{}", userId, strategyId, ruleModel(), awardId);
             return DefaultChainFactory.StrategyAwardVO.builder()
                     .awardId(awardId)
                     .logicModel(ruleModel())

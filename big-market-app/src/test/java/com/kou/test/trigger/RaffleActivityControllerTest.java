@@ -59,7 +59,7 @@ public class RaffleActivityControllerTest {
         log.info("测试结果：{}", JSON.toJSONString(response));
 
         // 让程序挺住方便测试，也可以去掉
-        new CountDownLatch(1).await();
+        //new CountDownLatch(1).await();
     }
 
     @Test

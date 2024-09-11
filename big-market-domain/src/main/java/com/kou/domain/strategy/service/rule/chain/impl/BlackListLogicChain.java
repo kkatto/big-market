@@ -25,7 +25,7 @@ public class BlackListLogicChain extends AbstractLoginChain {
 
     @Override
     public DefaultChainFactory.StrategyAwardVO logic(String userId, Long strategyId) {
-        log.info("抽奖责任链-黑名单接管开始 userId:{}, strategyId:{}, ruleModel:{}", userId, strategyId, ruleModel());
+        log.info("抽奖责任链-黑名单开始 userId:{} strategyId:{} ruleModel:{}", userId, strategyId, ruleModel());
 
         // 查询规则值配置
         // 样例 100:user001,user002,user003
@@ -47,7 +47,7 @@ public class BlackListLogicChain extends AbstractLoginChain {
         }
 
         // 过滤其他责任链
-        log.info("抽奖责任链-黑名单接管放行 userId: {} strategyId: {} ruleModel: {}", userId, strategyId, ruleModel());
+        log.info("抽奖责任链-黑名单放行 userId:{} strategyId:{} ruleModel:{}", userId, strategyId, ruleModel());
         return next().logic(userId, strategyId);
     }
 
