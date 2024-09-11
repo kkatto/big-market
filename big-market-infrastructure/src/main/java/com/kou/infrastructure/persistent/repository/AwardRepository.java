@@ -15,7 +15,6 @@ import com.kou.infrastructure.persistent.po.UserAwardRecord;
 import com.kou.infrastructure.persistent.po.UserCreditAccount;
 import com.kou.infrastructure.persistent.po.UserRaffleOrder;
 import com.kou.infrastructure.persistent.redis.IRedisService;
-import com.kou.middleware.db.router.annotation.DBRouterStrategy;
 import com.kou.middleware.db.router.strategy.IDBRouterStrategy;
 import com.kou.types.common.Constants;
 import com.kou.types.enums.ResponseCode;
