@@ -1,6 +1,7 @@
 package com.kou.domain.activity.model.aggregate;
 
 import com.kou.domain.activity.model.entity.ActivityOrderEntity;
+import com.kou.domain.activity.model.valobj.OrderStateVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -26,7 +26,7 @@ public class BehaviorEntity {
     /**
      * 行为类型；sign 签到、openai_pay 支付
      */
-    private BehaviorTypeVO behaviorTypeVO;
+    private BehaviorTypeVO behaviorType;
     /**
      * 业务ID；签到则是日期字符串，支付则是外部的业务ID
      */

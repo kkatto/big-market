@@ -197,7 +197,7 @@ public class RaffleActivityController implements IRaffleActivityService {
             log.info("日历签到返利开始 userId:{}", userId);
             BehaviorEntity behaviorEntity = new BehaviorEntity();
             behaviorEntity.setUserId(userId);
-            behaviorEntity.setBehaviorTypeVO(BehaviorTypeVO.SIGN);
+            behaviorEntity.setBehaviorType(BehaviorTypeVO.SIGN);
             behaviorEntity.setOutBusinessNo(dateFormatDay.format(new Date()));
             List<String> orderIdList = behaviorRebateService.createBehaviorRebateOrder(behaviorEntity);
             log.info("日历签到返利完成 userId:{} orderIds: {}", userId, JSON.toJSONString(orderIdList));

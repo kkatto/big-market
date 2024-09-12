@@ -5,20 +5,19 @@ import lombok.Getter;
 
 /**
  * @author KouJY
- * Date: 2024/8/2 14:52
+ * Date: 2024/9/11 16:21
  * Package: com.kou.domain.activity.model.valobj
  *
- * 单状态枚举值对象（用于描述对象属性的值，如枚举，不影响数据库操作的对象，无生命周期）
+ * 订单交易类型
  */
 @Getter
 @AllArgsConstructor
-public enum OrderStateVO {
+public enum OrderTradeTypeVO {
 
-    wait_pay("wait_pay","待支付"),
-    completed("completed", "完成"),
-    ;
+    credit_pay_trade("credit_pay_trade","积分兑换，需要支付类交易"),
+    rebate_no_pay_trade("rebate_no_pay_trade", "返利奖品，不需要支付类交易"),
+            ;
 
     private final String code;
     private final String desc;
-
 }

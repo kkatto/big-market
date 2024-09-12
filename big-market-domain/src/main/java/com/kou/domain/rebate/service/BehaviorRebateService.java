@@ -37,7 +37,7 @@ public class BehaviorRebateService implements IBehaviorRebateService {
     @Override
     public List<String> createBehaviorRebateOrder(BehaviorEntity behaviorEntity) {
         // 1.查询返利配置
-        List<DailyBehaviorRebateEntity> dailyBehaviorRebateEntityList = behaviorRebateRepository.queryDailyBehaviorRebateConfig(behaviorEntity.getBehaviorTypeVO());
+        List<DailyBehaviorRebateEntity> dailyBehaviorRebateEntityList = behaviorRebateRepository.queryDailyBehaviorRebateConfig(behaviorEntity.getBehaviorType());
         if (null == dailyBehaviorRebateEntityList || dailyBehaviorRebateEntityList.isEmpty()) {
             return new ArrayList<>();
         }

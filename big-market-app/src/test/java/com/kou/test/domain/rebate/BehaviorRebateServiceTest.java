@@ -42,10 +42,10 @@ public class BehaviorRebateServiceTest {
     @Test
     public void test_createOrder() throws InterruptedException {
         BehaviorEntity behaviorEntity = new BehaviorEntity();
-        behaviorEntity.setUserId("xiaokou1");
-        behaviorEntity.setBehaviorTypeVO(BehaviorTypeVO.SIGN);
+        behaviorEntity.setUserId("xiaokou3");
+        behaviorEntity.setBehaviorType(BehaviorTypeVO.SIGN);
         // 重复的 OutBusinessNo 会报错唯一索引冲突，这也是保证幂等的手段，确保不会多记账
-        behaviorEntity.setOutBusinessNo("202409002");
+        behaviorEntity.setOutBusinessNo("202409008");
 
         List<String> orderIds = behaviorRebateService.createBehaviorRebateOrder(behaviorEntity);
         log.info("请求参数：{}", JSON.toJSONString(behaviorEntity));
