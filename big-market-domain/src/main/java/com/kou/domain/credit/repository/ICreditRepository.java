@@ -1,6 +1,7 @@
 package com.kou.domain.credit.repository;
 
 import com.kou.domain.credit.model.aggregate.TradeAggregate;
+import com.kou.domain.credit.model.entity.CreditAccountEntity;
 
 /**
  * @author KouJY
@@ -12,4 +13,6 @@ import com.kou.domain.credit.model.aggregate.TradeAggregate;
 public interface ICreditRepository {
 
     void saveUserCreditTradeOrder(TradeAggregate tradeAggregate);
+
+    CreditAccountEntity queryUserCreditAccount(String userId);
 }

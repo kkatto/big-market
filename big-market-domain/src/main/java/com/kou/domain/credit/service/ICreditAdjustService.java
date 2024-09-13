@@ -1,5 +1,6 @@
 package com.kou.domain.credit.service;
 
+import com.kou.domain.credit.model.entity.CreditAccountEntity;
 import com.kou.domain.credit.model.entity.TradeEntity;
 
 /**
@@ -17,4 +18,11 @@ public interface ICreditAdjustService {
      * @return 订单号
      */
     String createUserCreditTradeOrder(TradeEntity tradeEntity);
+
+    /**
+     * 查询用户积分账户
+     * @param userId 用户ID
+     * @return 积分账户实体
+     */
+    CreditAccountEntity queryUserCreditAccount(String userId);
 }

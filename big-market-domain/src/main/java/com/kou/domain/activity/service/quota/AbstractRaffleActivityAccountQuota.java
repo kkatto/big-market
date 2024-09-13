@@ -30,7 +30,7 @@ public abstract class AbstractRaffleActivityAccountQuota extends RaffleActivityA
     }
 
     @Override
-    public String createSkuRechargeOrder(SkuRechargeEntity skuRechargeEntity) {
+    public UnpaidActivityOrderEntity createSkuRechargeOrder(SkuRechargeEntity skuRechargeEntity) {
         // 1. 参数校验
         String userId = skuRechargeEntity.getUserId();
         Long sku = skuRechargeEntity.getSku();
@@ -39,27 +39,39 @@ public abstract class AbstractRaffleActivityAccountQuota extends RaffleActivityA
             throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
         }
 
-        // 2. 查询基础信息
-        // 2.1 通过 sku 获得 activityId 和 activityCountId
+        // 2.查询未支付订单 [一个月以内的未支付订单]
+        UnpaidActivityOrderEntity unpaidActivityOrderEntity = activityRepository.queryUnpaidActivityOrder(skuRechargeEntity);
+        if (null != unpaidActivityOrderEntity) {
+            return unpaidActivityOrderEntity;
+        }
+
+        // 3. 查询基础信息
+        // 3.1 通过 sku 获得 activityId 和 activityCountId
         ActivitySkuEntity activitySkuEntity = queryActivitySku(sku);
-        // 2.2 通过 activityId 获取活动信息
+        // 3.2 通过 activityId 获取活动信息
         ActivityEntity activityEntity = queryRaffleActivityByActivityId(activitySkuEntity.getActivityId());
-        // 2.3 通过 activityCountId 获取活动库存信息
+        // 3.3 通过 activityCountId 获取活动库存信息
         ActivityCountEntity activityCountEntity = queryRaffleActivityCountByActivityCountId(activitySkuEntity.getActivityCountId());
 
-        // 3. 活动动作规则校验 「过滤失败则直接抛异常」
+        // 4. 活动动作规则校验 「过滤失败则直接抛异常」
         IActionChain actionChain = defaultActivityChainFactory.openActionChain();
         actionChain.action(activityEntity, activityCountEntity, activitySkuEntity);
 
-        // 4. 构建订单聚合对象
+        // 5. 构建订单聚合对象
         CreateQuotaOrderAggregate createQuotaOrderAggregate = buildOrderAggregate(skuRechargeEntity, activityEntity, activityCountEntity, activitySkuEntity);
 
-        // 5. 交易策略 - 【积分兑换，支付类订单】【返利无支付交易订单，直接充值到账】【订单状态变更交易类型策略】
+        // 6. 交易策略 - 【积分兑换，支付类订单】【返利无支付交易订单，直接充值到账】【订单状态变更交易类型策略】
         ITradePolicy tradePolicy = tradePolicyMap.get(skuRechargeEntity.getOrderTradeType().getCode());
         tradePolicy.trade(createQuotaOrderAggregate);
 
-        // 6. 返回订单结果
-        return createQuotaOrderAggregate.getActivityOrderEntity().getOrderId();
+        // 7. 返回订单结果
+        ActivityOrderEntity activityOrderEntity = createQuotaOrderAggregate.getActivityOrderEntity();
+        return UnpaidActivityOrderEntity.builder()
+                .userId(userId)
+                .orderId(activityOrderEntity.getOrderId())
+                .payAmount(activityOrderEntity.getPayAmount())
+                .outBusinessNo(activityOrderEntity.getOutBusinessNo())
+                .build();
     }
 
     protected abstract CreateQuotaOrderAggregate buildOrderAggregate(SkuRechargeEntity skuRechargeEntity, ActivityEntity activityEntity, ActivityCountEntity activityCountEntity, ActivitySkuEntity activitySkuEntity);
