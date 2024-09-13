@@ -32,7 +32,7 @@ public class RuleLockLogicTreeNode implements ILogicTreeNode {
         try {
             raffleCount = Long.parseLong(ruleValue);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            throw new RuntimeException("规则过滤-次数锁异常 ruleValue: " + ruleValue + " 配置不正确");
         }
 
         // 查询用户抽奖次数 - 当天的；策略ID:活动ID 1:1 的配置，可以直接用 strategyId 查询。
