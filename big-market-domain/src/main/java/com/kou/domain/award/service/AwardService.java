@@ -44,7 +44,7 @@ public class AwardService implements IAwardService {
         sendAwardMessage.setAwardTitle(userAwardRecordEntity.getAwardTitle());
         sendAwardMessage.setAwardConfig(userAwardRecordEntity.getAwardConfig());
 
-        BaseEvent.EventMessage<SendAwardMessageEvent.SendAwardMessage> sendAwardMessageEventMessage = sendAwardMessageEvent.buileEventMessage(sendAwardMessage);
+        BaseEvent.EventMessage<SendAwardMessageEvent.SendAwardMessage> sendAwardMessageEventMessage = sendAwardMessageEvent.buildEventMessage(sendAwardMessage);
 
         // 构建任务对象
         TaskEntity taskEntity = new TaskEntity();

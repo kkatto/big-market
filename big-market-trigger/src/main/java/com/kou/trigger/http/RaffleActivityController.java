@@ -202,7 +202,7 @@ public class RaffleActivityController implements IRaffleActivityService {
      */
     @RequestMapping(value = "calendar_sign_rebate", method = RequestMethod.POST)
     @Override
-    public Response<Boolean> calendarSignRebate(String userId) {
+    public Response<Boolean> calendarSignRebate(@RequestParam String userId) {
         try {
             log.info("日历签到返利开始 userId:{}", userId);
             BehaviorEntity behaviorEntity = new BehaviorEntity();
@@ -304,6 +304,7 @@ public class RaffleActivityController implements IRaffleActivityService {
         }
     }
 
+    @RequestMapping(value = "query_sku_product_list_by_activity_id", method = RequestMethod.POST)
     @Override
     public Response<List<SkuProductResponseDTO>> querySkuProductListByActivityId(Long activityId) {
         try {
@@ -348,6 +349,7 @@ public class RaffleActivityController implements IRaffleActivityService {
         }
     }
 
+    @RequestMapping(value = "query_user_credit_account", method = RequestMethod.POST)
     @Override
     public Response<BigDecimal> queryUserCreditAccount(String userId) {
         try {
@@ -368,8 +370,9 @@ public class RaffleActivityController implements IRaffleActivityService {
         }
     }
 
+    @RequestMapping(value = "credit_pay_exchange_sku", method = RequestMethod.POST)
     @Override
-    public Response<Boolean> creditPayExchangeSku(SkuProductShopCartRequestDTO request) {
+    public Response<Boolean> creditPayExchangeSku(@RequestBody SkuProductShopCartRequestDTO request) {
         try {
             log.info("积分兑换商品开始 userId:{} sku:{}", request.getUserId(), request.getSku());
             // 1. 创建兑换商品sku订单，outBusinessNo 每次创建出一个单号

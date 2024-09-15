@@ -34,7 +34,7 @@ public class ActivitySkuStockZeroCustomer {
             // 转换对象
             BaseEvent.EventMessage<Long> eventMessage = JSON.parseObject(message, new TypeReference<BaseEvent.EventMessage<Long>>() {
             }.getType());
-            long sku = eventMessage.getData();
+            Long sku = eventMessage.getData();
             // 更新库存
             skuStock.clearActivitySkuStock(sku);
             // 清空队列 「此时就不需要延迟更新数据库记录了」

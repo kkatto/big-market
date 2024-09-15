@@ -25,6 +25,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,6 +57,8 @@ public class ActivityRepository implements IActivityRepository {
     private IRaffleActivityAccountMonthDao raffleActivityAccountMonthDao;
     @Resource
     private IRaffleActivityAccountDayDao raffleActivityAccountDayDao;
+    @Resource
+    private IUserCreditAccountDao userCreditAccountDao;
     @Resource
     private IUserRaffleOrderDao userRaffleOrderDao;
     @Resource
@@ -258,7 +261,7 @@ public class ActivityRepository implements IActivityRepository {
         long surplus = redisService.decr(cacheKey);
         if (0 == surplus) {
             // 库存消耗没了以后，发送MQ消息，更新数据库库存
-            eventPublisher.publish(activitySkuStockZeroMessageEvent.topic(), activitySkuStockZeroMessageEvent.buileEventMessage(sku));
+            eventPublisher.publish(activitySkuStockZeroMessageEvent.topic(), activitySkuStockZeroMessageEvent.buildEventMessage(sku));
             //return false;
         } else if (surplus < 0) {
             // 库存小于0，恢复为0个
@@ -650,6 +653,13 @@ public class ActivityRepository implements IActivityRepository {
             raffleActivityOrderReq.setOutBusinessNo(deliveryOrderEntity.getOutBusinessNo());
             RaffleActivityOrder raffleActivityOrderRes = raffleActivityOrderDao.queryRaffleActivityOrder(raffleActivityOrderReq);
 
+            if (null == raffleActivityOrderRes) {
+                if (lock.isLocked()) {
+                    lock.unlock();
+                }
+                return;
+            }
+
             // 账户对象 - 总
             RaffleActivityAccount raffleActivityAccount = new RaffleActivityAccount();
             raffleActivityAccount.setUserId(raffleActivityOrderRes.getUserId());
@@ -707,7 +717,9 @@ public class ActivityRepository implements IActivityRepository {
             });
         } finally {
             dbRouterStrategy.clear();
-            lock.unlock();
+            if (lock.isLocked()) {
+                lock.unlock();
+            }
         }
     }
 
@@ -754,6 +766,22 @@ public class ActivityRepository implements IActivityRepository {
                 .outBusinessNo(raffleActivityOrderRes.getOutBusinessNo())
                 .payAmount(raffleActivityOrderRes.getPayAmount())
                 .build();
+    }
+
+    @Override
+    public BigDecimal queryUserCreditAccountAmount(String userId) {
+        try {
+            dbRouterStrategy.doRouter(userId);
+            UserCreditAccount userCreditAccountReq = new UserCreditAccount();
+            userCreditAccountReq.setUserId(userId);
+            UserCreditAccount userCreditAccount = userCreditAccountDao.queryUserCreditAccount(userCreditAccountReq);
+            if (null == userCreditAccount) {
+                return BigDecimal.ZERO;
+            }
+            return userCreditAccount.getAvailableAmount();
+        } finally {
+            dbRouterStrategy.clear();
+        }
     }
 
 }
