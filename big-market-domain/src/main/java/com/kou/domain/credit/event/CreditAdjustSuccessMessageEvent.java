@@ -26,8 +26,8 @@ public class CreditAdjustSuccessMessageEvent extends BaseEvent<CreditAdjustSucce
     private String topic;
 
     @Override
-    public EventMessage<CreditAdjustSuccessMessage> buileEventMessage(CreditAdjustSuccessMessage data) {
-        return EventMessage.<CreditAdjustSuccessMessage>builder()
+    public EventMessage<CreditAdjustSuccessMessage> buildEventMessage(CreditAdjustSuccessMessage data) {
+        return EventMessage.<CreditAdjustSuccessMessageEvent.CreditAdjustSuccessMessage>builder()
                 .id(RandomStringUtils.randomNumeric(11))
                 .timestamp(new Date())
                 .data(data)

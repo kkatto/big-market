@@ -6,7 +6,6 @@ import com.kou.domain.credit.model.entity.CreditAccountEntity;
 import com.kou.domain.credit.model.entity.CreditOrderEntity;
 import com.kou.domain.credit.model.entity.TaskEntity;
 import com.kou.domain.credit.model.entity.TradeEntity;
-import com.kou.domain.credit.model.valobj.TaskStateVO;
 import com.kou.domain.credit.repository.ICreditRepository;
 import com.kou.domain.credit.service.ICreditAdjustService;
 import com.kou.types.event.BaseEvent;
@@ -33,13 +32,13 @@ public class CreditAdjustService implements ICreditAdjustService {
 
     @Override
     public String createUserCreditTradeOrder(TradeEntity tradeEntity) {
-        log.info("调整账户积分额度开始 userId:{} tradeName:{} amount:{}", tradeEntity.getUserId(), tradeEntity.getTradeName(), tradeEntity.getTradeAmount());
-        // 1.创建账户积分实体
+        log.info("账户积分额度开始 userId:{} tradeName:{} amount:{}", tradeEntity.getUserId(), tradeEntity.getTradeName(), tradeEntity.getTradeAmount());
+        // 1. 创建账户积分实体
         CreditAccountEntity creditAccountEntity = TradeAggregate.buildCreditAccountEntity(
                 tradeEntity.getUserId(),
                 tradeEntity.getTradeAmount());
 
-        // 2.创建账户订单实体
+        // 2. 创建账户订单实体
         CreditOrderEntity creditOrderEntity = TradeAggregate.buildCreditOrderEntity(
                 tradeEntity.getUserId(),
                 tradeEntity.getTradeName(),
@@ -47,14 +46,13 @@ public class CreditAdjustService implements ICreditAdjustService {
                 tradeEntity.getTradeAmount(),
                 tradeEntity.getOutBusinessNo());
 
-        // 3.创建消息任务对象
-        CreditAdjustSuccessMessageEvent.CreditAdjustSuccessMessage creditAdjustSuccessMessage = CreditAdjustSuccessMessageEvent.CreditAdjustSuccessMessage.builder()
-                .userId(tradeEntity.getUserId())
-                .orderId(creditOrderEntity.getOrderId())
-                .tradeAmount(tradeEntity.getTradeAmount())
-                .outBusinessNo(tradeEntity.getOutBusinessNo())
-                .build();
-        BaseEvent.EventMessage<CreditAdjustSuccessMessageEvent.CreditAdjustSuccessMessage> creditAdjustSuccessMessageEventMessage = creditAdjustSuccessMessageEvent.buileEventMessage(creditAdjustSuccessMessage);
+        // 3. 构建消息任务对象
+        CreditAdjustSuccessMessageEvent.CreditAdjustSuccessMessage creditAdjustSuccessMessage = new CreditAdjustSuccessMessageEvent.CreditAdjustSuccessMessage();
+        creditAdjustSuccessMessage.setUserId(tradeEntity.getUserId());
+        creditAdjustSuccessMessage.setOrderId(creditOrderEntity.getOrderId());
+        creditAdjustSuccessMessage.setTradeAmount(tradeEntity.getTradeAmount());
+        creditAdjustSuccessMessage.setOutBusinessNo(tradeEntity.getOutBusinessNo());
+        BaseEvent.EventMessage<CreditAdjustSuccessMessageEvent.CreditAdjustSuccessMessage> creditAdjustSuccessMessageEventMessage = creditAdjustSuccessMessageEvent.buildEventMessage(creditAdjustSuccessMessage);
 
         TaskEntity taskEntity = TradeAggregate.buildTaskEntity(
                 tradeEntity.getUserId(),
@@ -62,7 +60,7 @@ public class CreditAdjustService implements ICreditAdjustService {
                 creditAdjustSuccessMessageEventMessage.getId(),
                 creditAdjustSuccessMessageEventMessage);
 
-        // 4.创建聚合对象
+        // 4. 构建交易聚合对象
         TradeAggregate tradeAggregate = TradeAggregate.builder()
                 .userId(tradeEntity.getUserId())
                 .creditAccountEntity(creditAccountEntity)
@@ -70,9 +68,9 @@ public class CreditAdjustService implements ICreditAdjustService {
                 .taskEntity(taskEntity)
                 .build();
 
-        // 4.保存积分交易订单
+        // 5. 保存积分交易订单
         creditRepository.saveUserCreditTradeOrder(tradeAggregate);
-        log.info("调整账户积分额度完成 userId:{} orderId:{}", tradeEntity.getUserId(), creditOrderEntity.getOrderId());
+        log.info("账户积分额度完成 userId:{} orderId:{}", tradeEntity.getUserId(), creditOrderEntity.getOrderId());
 
         return creditOrderEntity.getOrderId();
     }

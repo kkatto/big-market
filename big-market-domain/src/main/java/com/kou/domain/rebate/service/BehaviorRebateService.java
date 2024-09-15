@@ -73,7 +73,7 @@ public class BehaviorRebateService implements IBehaviorRebateService {
                     .build();
 
             // 构建事件消息
-            BaseEvent.EventMessage<SendRebateMessageEvent.RebateMessage> rebateMessageEventMessage = sendRebateMessageEvent.buileEventMessage(rebateMessage);
+            BaseEvent.EventMessage<SendRebateMessageEvent.RebateMessage> rebateMessageEventMessage = sendRebateMessageEvent.buildEventMessage(rebateMessage);
 
             // 组装任务对象
             TaskEntity taskEntity = TaskEntity.builder()

@@ -162,7 +162,7 @@ public class AwardRepository implements IAwardRepository {
                        userCreditAccountDao.insert(userCreditAccountReq);
                    }
                    else {
-                       userCreditAccountDao.updateAndAmount(userCreditAccountReq);
+                       userCreditAccountDao.updateAddAmount(userCreditAccountReq);
                    }
 
                    // 更新奖品记录

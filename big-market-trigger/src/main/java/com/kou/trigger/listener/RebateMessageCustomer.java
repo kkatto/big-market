@@ -1,8 +1,9 @@
 package com.kou.trigger.listener;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.TypeReference;
 import com.kou.domain.activity.model.entity.SkuRechargeEntity;
+import com.kou.domain.activity.model.valobj.OrderTradeTypeVO;
 import com.kou.domain.activity.service.IRaffleActivityAccountQuotaService;
 import com.kou.domain.credit.model.entity.TradeEntity;
 import com.kou.domain.credit.model.valobj.TradeNameVO;
@@ -40,23 +41,23 @@ public class RebateMessageCustomer {
     @Resource
     private ICreditAdjustService creditAdjustService;
 
-    @RabbitListener(queuesToDeclare = @Queue("${spring.rabbitmq.topic.send_rebate}"))
+    @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.send_rebate}"))
     public void listener(String message) {
         try {
             log.info("监听用户行为返利消息 topic: {} message: {}", topic, message);
-            // 1.转换消息
+            // 1. 转换消息
             BaseEvent.EventMessage<SendRebateMessageEvent.RebateMessage> eventMessage = JSON.parseObject(message, new TypeReference<BaseEvent.EventMessage<SendRebateMessageEvent.RebateMessage>>() {
             }.getType());
-
             SendRebateMessageEvent.RebateMessage rebateMessage = eventMessage.getData();
 
-            // 2.入账奖励
+            // 2. 入账奖励
             switch (rebateMessage.getRebateType()) {
                 case "sku":
                     SkuRechargeEntity skuRechargeEntity = new SkuRechargeEntity();
                     skuRechargeEntity.setUserId(rebateMessage.getUserId());
-                    skuRechargeEntity.setSku(Long.parseLong(rebateMessage.getRebateConfig()));
+                    skuRechargeEntity.setSku(Long.valueOf(rebateMessage.getRebateConfig()));
                     skuRechargeEntity.setOutBusinessNo(rebateMessage.getBizId());
+                    skuRechargeEntity.setOrderTradeType(OrderTradeTypeVO.rebate_no_pay_trade);
                     raffleActivityAccountQuotaService.createSkuRechargeOrder(skuRechargeEntity);
                     break;
                 case "integral":
@@ -80,4 +81,5 @@ public class RebateMessageCustomer {
             throw e;
         }
     }
+
 }

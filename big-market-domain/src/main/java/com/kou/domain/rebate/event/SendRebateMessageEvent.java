@@ -22,7 +22,7 @@ public class SendRebateMessageEvent extends BaseEvent<SendRebateMessageEvent.Reb
     private String topic;
 
     @Override
-    public EventMessage<RebateMessage> buileEventMessage(RebateMessage data) {
+    public EventMessage<RebateMessage> buildEventMessage(RebateMessage data) {
         return EventMessage.<RebateMessage>builder()
                 .id(RandomStringUtils.randomNumeric(11))
                 .timestamp(new Date())

@@ -32,6 +32,7 @@ public class EventPublisher {
             throw e;
         }
     }
+
     public void publish(String topic, String eventMessageJSON) {
         try {
             rabbitTemplate.convertAndSend(eventMessageJSON);

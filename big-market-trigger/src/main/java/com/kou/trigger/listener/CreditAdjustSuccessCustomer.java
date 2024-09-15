@@ -8,13 +8,16 @@ import com.kou.domain.credit.event.CreditAdjustSuccessMessageEvent;
 import com.kou.types.enums.ResponseCode;
 import com.kou.types.event.BaseEvent;
 import com.kou.types.exception.AppException;
+import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 /**
  * @author KouJY
@@ -32,8 +35,8 @@ public class CreditAdjustSuccessCustomer {
     @Resource
     private IRaffleActivityAccountQuotaService raffleActivityAccountQuotaService;
 
-    @RabbitListener(queuesToDeclare = @Queue("${spring.rabbitmq.topic.credit_adjust_success}"))
-    public void listener(String message) {
+    @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.credit_adjust_success}"))
+    public void listener(String message) throws IOException {
         try {
             log.info("监听积分账户调整成功消息，进行交易商品发货 topic: {} message: {}", topic, message);
             BaseEvent.EventMessage<CreditAdjustSuccessMessageEvent.CreditAdjustSuccessMessage> eventMessage = JSON.parseObject(message, new TypeReference<BaseEvent.EventMessage<CreditAdjustSuccessMessageEvent.CreditAdjustSuccessMessage>>() {
@@ -41,10 +44,9 @@ public class CreditAdjustSuccessCustomer {
             CreditAdjustSuccessMessageEvent.CreditAdjustSuccessMessage creditAdjustSuccessMessage = eventMessage.getData();
 
             // 积分发货
-            DeliveryOrderEntity deliveryOrderEntity = DeliveryOrderEntity.builder()
-                    .userId(creditAdjustSuccessMessage.getUserId())
-                    .outBusinessNo(creditAdjustSuccessMessage.getOutBusinessNo())
-                    .build();
+            DeliveryOrderEntity deliveryOrderEntity = new DeliveryOrderEntity();
+            deliveryOrderEntity.setUserId(creditAdjustSuccessMessage.getUserId());
+            deliveryOrderEntity.setOutBusinessNo(creditAdjustSuccessMessage.getOutBusinessNo());
             raffleActivityAccountQuotaService.updateOrder(deliveryOrderEntity);
         } catch (AppException e) {
             if (ResponseCode.INDEX_DUP.getCode().equals(e.getCode())) {
@@ -57,4 +59,5 @@ public class CreditAdjustSuccessCustomer {
             throw e;
         }
     }
+
 }
