@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 /**
  * @author KouJY
  * Date: 2024/9/5 11:11
- * Package: com.kou.domain.rebate.model.valobj
+ * Package: com.kou.domain.rebate.model.entity
  */
 @Getter
 @Builder

@@ -73,12 +73,17 @@ public class ActivityRepository implements IActivityRepository {
     @Override
     public ActivitySkuEntity queryActivitySku(Long sku) {
         RaffleActivitySku raffleActivitySku = raffleActivitySkuDao.queryActivitySku(sku);
+        String cacheKey = Constants.RedisKey.ACTIVITY_SKU_STOCK_COUNT_KEY + sku;
+        Long cacheSkuStock = redisService.getAtomicLong(cacheKey);
+        if (null == cacheSkuStock || 0 == cacheSkuStock) {
+            cacheSkuStock = 0L;
+        }
         return ActivitySkuEntity.builder()
                 .sku(raffleActivitySku.getSku())
                 .activityId(raffleActivitySku.getActivityId())
                 .activityCountId(raffleActivitySku.getActivityCountId())
                 .stockCount(raffleActivitySku.getStockCount())
-                .stockCountSurplus(raffleActivitySku.getStockCountSurplus())
+                .stockCountSurplus(cacheSkuStock.intValue())
                 .productAmount(raffleActivitySku.getProductAmount())
                 .build();
     }
@@ -269,9 +274,12 @@ public class ActivityRepository implements IActivityRepository {
             return false;
         }
 
+        // 1. 按照cacheKey decr 后的值，如 99、98、97 和 key 组成为库存锁的key进行使用。
+        // 2. 加锁为了兜底，如果后续有恢复库存，手动处理等【运营是人来操作，会有这种情况发放，系统要做防护】，也不会超卖。因为所有的可用库存key，都被加锁了。
+        // 3. 设置加锁时间为活动到期 + 延迟1天
         String lockKey = cacheKey + Constants.UNDERLINE + surplus;
-        long expiresMills = endDateTime.getTime() - System.currentTimeMillis() + TimeUnit.DAYS.toDays(1);
-        Boolean lock = redisService.setNx(lockKey, expiresMills, TimeUnit.MILLISECONDS);
+        long expireMillis = endDateTime.getTime() - System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1);
+        Boolean lock = redisService.setNx(lockKey, expireMillis, TimeUnit.MILLISECONDS);
         if (!lock) {
             log.info("活动sku库存加锁失败 {}", lockKey);
         }
@@ -464,8 +472,8 @@ public class ActivityRepository implements IActivityRepository {
                                         .build());
                     } else {
                         raffleActivityAccountMonthDao.insertActivityAccountMonth(RaffleActivityAccountMonth.builder()
-                                .userId(userId)
-                                .activityId(activityId)
+                                .userId(activityAccountMonthEntity.getUserId())
+                                .activityId(activityAccountMonthEntity.getActivityId())
                                 .month(activityAccountMonthEntity.getMonth())
                                 .monthCount(activityAccountMonthEntity.getMonthCount())
                                 .monthCountSurplus(activityAccountMonthEntity.getMonthCountSurplus() - 1)
@@ -488,8 +496,8 @@ public class ActivityRepository implements IActivityRepository {
                         if (1 != updateDayCount) {
                             // 未更新成功则回滚
                             status.setRollbackOnly();
-                            log.warn("写入创建参与活动记录，更新月账户额度不足，异常 userId: {} activityId: {} month: {}", userId, activityId, activityAccountMonthEntity.getMonth());
-                            throw new AppException(ResponseCode.ACCOUNT_MONTH_QUOTA_ERROR.getCode(), ResponseCode.ACCOUNT_MONTH_QUOTA_ERROR.getInfo());
+                            log.warn("写入创建参与活动记录，更新日账户额度不足，异常 userId: {} activityId: {} day: {}", userId, activityId, activityAccountDayEntity.getDay());
+                            throw new AppException(ResponseCode.ACCOUNT_DAY_QUOTA_ERROR.getCode(), ResponseCode.ACCOUNT_DAY_QUOTA_ERROR.getInfo());
                         }
                         // 更新总账户中日镜像库存
                         raffleActivityAccountDao.updateActivityAccountDaySubtractionQuota(

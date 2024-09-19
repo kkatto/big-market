@@ -26,8 +26,8 @@ public class RaffleActivityAccountQuotaSupport {
         return activityRepository.queryActivitySku(sku);
     }
 
-    public ActivityEntity queryRaffleActivityByActivityId(Long strategyId) {
-        return activityRepository.queryRaffleActivityByActivityId(strategyId);
+    public ActivityEntity queryRaffleActivityByActivityId(Long activityId) {
+        return activityRepository.queryRaffleActivityByActivityId(activityId);
     }
 
     public ActivityCountEntity queryRaffleActivityCountByActivityCountId(Long activityCountId) {

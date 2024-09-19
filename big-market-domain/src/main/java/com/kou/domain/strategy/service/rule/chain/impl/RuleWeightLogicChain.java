@@ -2,7 +2,7 @@ package com.kou.domain.strategy.service.rule.chain.impl;
 
 import com.kou.domain.strategy.repository.IStrategyRepository;
 import com.kou.domain.strategy.service.armory.IStrategyDispatch;
-import com.kou.domain.strategy.service.rule.chain.AbstractLoginChain;
+import com.kou.domain.strategy.service.rule.chain.AbstractLogicChain;
 import com.kou.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
 import com.kou.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.*;
 @Slf4j
 @Component(value = "rule_weight")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class RuleWeightLogicChain extends AbstractLoginChain {
+public class RuleWeightLogicChain extends AbstractLogicChain {
 
     @Resource
     private IStrategyRepository strategyRepository;
@@ -42,7 +42,7 @@ public class RuleWeightLogicChain extends AbstractLoginChain {
      */
     @Override
     public DefaultChainFactory.StrategyAwardVO logic(String userId, Long strategyId) {
-        log.info("抽奖责任链-权重接管开始 userId: {} strategyId: {} ruleModel: {}", userId, strategyId, ruleModel());
+        log.info("抽奖责任链-权重开始 userId: {} strategyId: {} ruleModel: {}", userId, strategyId, ruleModel());
 
         String ruleValue = strategyRepository.queryStrategyRuleValue(strategyId, ruleModel());
 

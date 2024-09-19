@@ -23,11 +23,11 @@ public interface IStrategyRepository {
 
     List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId);
 
-    void storeStrategyAwardSearchRateTable(String key, int rateRange, Map<Integer, Integer> shuffleStrategyAwardSearchRateTable);
+    void storeStrategyAwardSearchRateTable(String key, Integer rateRange, Map<Integer, Integer> shuffleStrategyAwardSearchRateTable);
 
-    int getRangeRate(Long strategyId);
+    int getRateRange(Long strategyId);
 
-    int getRangeRate(String key);
+    int getRateRange(String key);
 
     Integer getStrategyAwardAssemble(String key, int rateKey);
 

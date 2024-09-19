@@ -44,7 +44,7 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
         RuleTreeNodeVO ruleTreeNode = treeNodeVOMap.get(nextNodeKey);
         while (null != nextNodeKey) {
             // 获取决策节点
-            ILogicTreeNode logicTreeNode = logicTreeNodeMap.get(nextNodeKey);
+            ILogicTreeNode logicTreeNode = logicTreeNodeMap.get(ruleTreeNode.getRuleKey());
             String ruleValue = ruleTreeNode.getRuleValue();
 
             // 决策节点计算

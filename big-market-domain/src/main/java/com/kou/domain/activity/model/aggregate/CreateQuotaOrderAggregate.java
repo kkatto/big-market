@@ -46,7 +46,7 @@ public class CreateQuotaOrderAggregate {
     private Integer monthCount;
 
     /**
-     * 活动账户实体
+     * 活动订单实体
      */
     private ActivityOrderEntity activityOrderEntity;
 }

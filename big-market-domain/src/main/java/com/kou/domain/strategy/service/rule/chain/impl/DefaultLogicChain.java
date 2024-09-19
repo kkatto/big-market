@@ -1,9 +1,11 @@
 package com.kou.domain.strategy.service.rule.chain.impl;
 
 import com.kou.domain.strategy.service.armory.IStrategyDispatch;
-import com.kou.domain.strategy.service.rule.chain.AbstractLoginChain;
+import com.kou.domain.strategy.service.rule.chain.AbstractLogicChain;
 import com.kou.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -16,8 +18,9 @@ import javax.annotation.Resource;
  * 默认的责任链「作为最后一个链」
  */
 @Slf4j
-@Component(value = "default")
-public class DefaultLogicChain extends AbstractLoginChain {
+@Component(value = "rule_default")
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class DefaultLogicChain extends AbstractLogicChain {
 
     @Resource
     private IStrategyDispatch strategyDispatch;

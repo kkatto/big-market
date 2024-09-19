@@ -9,7 +9,7 @@ import com.kou.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
  *
  * 抽奖策略规则责任链接口
  */
-public interface ILogicChain extends ILogicChainArmory {
+public interface ILogicChain extends ILogicChainArmory, Cloneable {
 
     /**
      * 责任链接口

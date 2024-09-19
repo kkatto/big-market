@@ -83,8 +83,15 @@ public class StrategyRepository implements IStrategyRepository {
         return strategyAwardEntityList;
     }
 
+    /**
+     * 在 Redisson 中，当你调用 getMap 方法时，如果指定的 key 不存在，Redisson 并不会立即在 Redis 数据库中创建这个 key。相反，它会返回一个 RMap 对象的实例，这个实例是一个本地的 Java 对象，它代表了 Redis 中的一个哈希（hash）。
+     * <p>
+     * 当你开始使用这个 RMap 实例进行操作，比如添加键值对，那么 Redisson 会在 Redis 数据库中创建相应的 key，并将数据存储在这个 key 对应的哈希中。如果你只是获取了 RMap 实例而没有进行任何操作，那么在 Redis 数据库中是不会有任何变化的。
+     * <p>
+     * 简单来说，getMap 方法返回的 RMap 对象是懒加载的，只有在你实际进行操作时，Redis 数据库中的数据结构才会被创建或修改。
+     */
     @Override
-    public void storeStrategyAwardSearchRateTable(String key, int rateRange, Map<Integer, Integer> shuffleStrategyAwardSearchRateTable) {
+    public void storeStrategyAwardSearchRateTable(String key, Integer rateRange, Map<Integer, Integer> shuffleStrategyAwardSearchRateTable) {
         // 1. 存储抽奖策略范围值，如10000，用于生成10000以内的随机数
         redisService.setValue(Constants.RedisKey.STRATEGY_RATE_RANGE_KEY + key, rateRange);
         // 2. 存储概率查找表
@@ -93,12 +100,12 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public int getRangeRate(Long strategyId) {
-        return getRangeRate(String.valueOf(strategyId));
+    public int getRateRange(Long strategyId) {
+        return getRateRange(String.valueOf(strategyId));
     }
 
     @Override
-    public int getRangeRate(String key) {
+    public int getRateRange(String key) {
         String cacheKey = Constants.RedisKey.STRATEGY_RATE_RANGE_KEY + key;
         if (!redisService.isExists(cacheKey)) {
             throw new AppException(ResponseCode.UN_ASSEMBLED_STRATEGY_ARMORY.getCode(), cacheKey + Constants.COLON + ResponseCode.UN_ASSEMBLED_STRATEGY_ARMORY.getInfo());
@@ -121,6 +128,9 @@ public class StrategyRepository implements IStrategyRepository {
         }
         // 如果缓存中没有，就去数据库中取
         Strategy strategy = strategyDao.queryStrategyByStrategyId(strategyId);
+        if (null == strategy) {
+            return StrategyEntity.builder().build();
+        }
         strategyEntity = StrategyEntity.builder()
                 .strategyId(strategy.getStrategyId())
                 .strategyDesc(strategy.getStrategyDesc())
@@ -138,15 +148,18 @@ public class StrategyRepository implements IStrategyRepository {
         StrategyRule strategyRuleReq = new StrategyRule();
         strategyRuleReq.setStrategyId(strategyId);
         strategyRuleReq.setRuleModel(ruleModel);
-        StrategyRule strategyRule = strategyRuleDao.queryStrategyRule(strategyRuleReq);
+        StrategyRule strategyRuleRes = strategyRuleDao.queryStrategyRule(strategyRuleReq);
+        if (null == strategyRuleRes) {
+            return null;
+        }
 
         return StrategyRuleEntity.builder()
-                .strategyId(strategyRule.getStrategyId())
-                .awardId(strategyRule.getAwardId())
-                .ruleDesc(strategyRule.getRuleDesc())
-                .ruleType(strategyRule.getRuleType())
-                .ruleValue(strategyRule.getRuleValue())
-                .ruleModel(strategyRule.getRuleModel())
+                .strategyId(strategyRuleRes.getStrategyId())
+                .awardId(strategyRuleRes.getAwardId())
+                .ruleDesc(strategyRuleRes.getRuleDesc())
+                .ruleType(strategyRuleRes.getRuleType())
+                .ruleValue(strategyRuleRes.getRuleValue())
+                .ruleModel(strategyRuleRes.getRuleModel())
                 .build();
     }
 
@@ -243,7 +256,7 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Override
     public void cacheStrategyAwardCount(String cacheKey, Integer awardCount) {
-        if (null != redisService.getValue(cacheKey)) {
+        if (redisService.isExists(cacheKey)) {
             return;
         }
         redisService.setAtomicLong(cacheKey, awardCount);
@@ -259,7 +272,7 @@ public class StrategyRepository implements IStrategyRepository {
         long surplus = redisService.decr(cacheKey);
         if (surplus < 0) {
             // 库存小于0，恢复为0个
-            redisService.setValue(cacheKey, 0);
+            redisService.setAtomicLong(cacheKey, 0);
             return false;
         }
         // 1. 按照cacheKey decr 后的值，如 99、98、97 和 key 组成为库存锁的key进行使用。
@@ -316,7 +329,7 @@ public class StrategyRepository implements IStrategyRepository {
         StrategyAward strategyAwardReq = new StrategyAward();
         strategyAwardReq.setStrategyId(strategyId);
         strategyAwardReq.setAwardId(awardId);
-        StrategyAward strategyAwardRes = strategyAwardDao.queryStrategyAwardEntity(strategyAwardReq);
+        StrategyAward strategyAwardRes = strategyAwardDao.queryStrategyAward(strategyAwardReq);
 
         // 转换数据
         strategyAwardEntity = StrategyAwardEntity.builder()

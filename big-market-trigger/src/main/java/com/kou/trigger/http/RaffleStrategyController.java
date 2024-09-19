@@ -57,7 +57,7 @@ public class RaffleStrategyController implements IRaffleStrategyService {
      */
     @RequestMapping(value = "strategy_armory", method = RequestMethod.GET)
     @Override
-    public Response<Boolean> strategyArmory(Long strategyId) {
+    public Response<Boolean> strategyArmory(@RequestParam Long strategyId) {
         try {
             log.info("抽奖策略装配开始：strategyId: {}", strategyId);
             boolean armoryStatus = strategyArmory.assembleLotteryStrategy(strategyId);

@@ -1,10 +1,12 @@
 package com.kou.domain.strategy.service.rule.chain.impl;
 
 import com.kou.domain.strategy.repository.IStrategyRepository;
-import com.kou.domain.strategy.service.rule.chain.AbstractLoginChain;
+import com.kou.domain.strategy.service.rule.chain.AbstractLogicChain;
 import com.kou.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
 import com.kou.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -18,7 +20,8 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component(value = "rule_blacklist")
-public class BlackListLogicChain extends AbstractLoginChain {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class BlackListLogicChain extends AbstractLogicChain {
 
     @Resource
     private IStrategyRepository strategyRepository;

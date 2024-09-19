@@ -43,7 +43,7 @@ public class SkuProductEntity {
      */
     private BigDecimal productAmount;
     /**
-     * 活动商品数量
+     * 活动配置的次数 - 购买商品后可以获得的次数
      */
     private ActivityCount activityCount;
 

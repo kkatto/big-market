@@ -85,8 +85,8 @@ public class AwardRepository implements IAwardRepository {
         task.setState(taskEntity.getState().getCode());
 
         UserRaffleOrder userRaffleOrderReq = new UserRaffleOrder();
-        userRaffleOrderReq.setUserId(userId);
-        userRaffleOrderReq.setOrderId(userAwardRecord.getOrderId());
+        userRaffleOrderReq.setUserId(userAwardRecordEntity.getUserId());
+        userRaffleOrderReq.setOrderId(userAwardRecordEntity.getOrderId());
 
         try {
             dbRouterStrategy.doRouter(userId);
@@ -171,15 +171,16 @@ public class AwardRepository implements IAwardRepository {
                        log.warn("更新中奖记录，重复更新拦截 userId:{} giveOutPrizesAggregate:{}", userId, JSON.toJSONString(giveOutPrizesAggregate));
                        status.setRollbackOnly();
                    }
+                   return 1;
                } catch (DuplicateKeyException e) {
                    status.setRollbackOnly();
                    log.error("更新中奖记录，唯一索引冲突 userId: {} ", userId, e);
                    throw new AppException(ResponseCode.INDEX_DUP.getCode(), e);
                }
-               return 1;
             });
         } finally {
             dbRouterStrategy.clear();
+            lock.unlock();
         }
 
     }
