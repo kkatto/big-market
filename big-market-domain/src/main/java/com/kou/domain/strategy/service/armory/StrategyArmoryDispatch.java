@@ -134,7 +134,7 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
     /**
      * 转换计算，只根据小数位来计算。如【0.01返回100】、【0.009返回1000】、【0.0018返回10000】
      */
-    private double convert(double min){
+    private double convertOld(double min){
         if(0 == min) return 1D;
 
         double current = min;
@@ -144,6 +144,24 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
             max = max * 10;
         }
         return max;
+    }
+
+    private double convert(double min) {
+        if (min == 0) return 1D;
+
+        // 将数字转换为字符串以计算小数位数
+        String minStr = Double.toString(min);
+        int decimalPlaces = 0;
+
+        // 找到小数点的位置
+        int decimalPointIndex = minStr.indexOf('.');
+        if (decimalPointIndex != -1) {
+            // 计算小数点后的位数
+            decimalPlaces = minStr.length() - decimalPointIndex - 1;
+        }
+
+        // 返回 10 的幂次方
+        return Math.pow(10, decimalPlaces);
     }
 
     /**
