@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @author KouJY
  * Date: 2024/8/29 14:20
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActivityDrawResponseDTO {
+public class ActivityDrawResponseDTO implements Serializable {
 
     /**
      * 奖品ID

@@ -2,6 +2,7 @@ package com.kou.trigger.api.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
  * sku商品对象
  */
 @Data
-public class SkuProductResponseDTO {
+public class SkuProductResponseDTO implements Serializable {
 
     /**
      * 商品sku
