@@ -204,7 +204,7 @@ public class StrategyRepository implements IStrategyRepository {
         List<RuleTreeNode> ruleTreeNodeList = ruleTreeNodeDao.queryRuleTreeNodeListByTreeId(treeId);
         List<RuleTreeNodeLine> ruleTreeNodeLineList = ruleTreeNodeLineDao.queryRuleTreeNodeLineListByTreeId(treeId);
 
-        // 构建 rule_tree_node_line 转换为 Map
+        // 1.构建 rule_tree_node_line 转换为 Map
         Map<String, List<RuleTreeNodeLineVO>> ruleTreeNodeLineMap = new HashMap<>();
         for (RuleTreeNodeLine ruleTreeNodeLine : ruleTreeNodeLineList) {
 
@@ -221,11 +221,12 @@ public class StrategyRepository implements IStrategyRepository {
              * 这里的 ruleTreeNodeLine.getRuleNodeFrom() 作为键，如果Map中已经存在这个键，则直接获取对应的值；
              * 如果不存在，则使用 k -> new ArrayList<>() 创建一个新的ArrayList并将其放入Map中，并返回这个新创建的ArrayList。
              */
-            List<RuleTreeNodeLineVO> ruleTreeNodeLineVOList = ruleTreeNodeLineMap.computeIfAbsent(ruleTreeNodeLine.getRuleNodeFrom(), k -> new ArrayList<>());
-            ruleTreeNodeLineVOList.add(ruleTreeNodeLineVO);
+            ruleTreeNodeLineMap
+                    .computeIfAbsent(ruleTreeNodeLine.getRuleNodeFrom(), k -> new ArrayList<>())
+                    .add(ruleTreeNodeLineVO);
         }
 
-        // 构建 rule_tree_node 转换为 Map
+        // 2.构建 rule_tree_node 转换为 Map
         Map<String, RuleTreeNodeVO> ruleTreeNodeMap = new HashMap<>();
         for (RuleTreeNode ruleTreeNode : ruleTreeNodeList) {
 
@@ -240,7 +241,7 @@ public class StrategyRepository implements IStrategyRepository {
             ruleTreeNodeMap.put(ruleTreeNode.getRuleKey(), ruleTreeNodeVO);
         }
 
-        // 构建 rule_tree
+        // 3.构建 rule_tree
         RuleTreeVO ruleTreeVO = RuleTreeVO.builder()
                 .treeId(ruleTree.getTreeId())
                 .treeDesc(ruleTree.getTreeDesc())
