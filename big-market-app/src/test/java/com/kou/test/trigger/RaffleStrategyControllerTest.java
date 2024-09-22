@@ -6,7 +6,7 @@ import com.kou.trigger.api.dto.RaffleAwardListRequestDTO;
 import com.kou.trigger.api.dto.RaffleAwardListResponseDTO;
 import com.kou.trigger.api.dto.RaffleStrategyRuleWeightRequestDTO;
 import com.kou.trigger.api.dto.RaffleStrategyRuleWeightResponseDTO;
-import com.kou.types.model.Response;
+import com.kou.trigger.api.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

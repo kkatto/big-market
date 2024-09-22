@@ -1,7 +1,7 @@
 package com.kou.trigger.api;
 
 import com.kou.trigger.api.dto.*;
-import com.kou.types.model.Response;
+import com.kou.trigger.api.response.Response;
 
 import java.util.List;
 

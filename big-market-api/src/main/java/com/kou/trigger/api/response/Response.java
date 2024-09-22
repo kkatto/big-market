@@ -1,4 +1,4 @@
-package com.kou.types.model;
+package com.kou.trigger.api.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -14,7 +14,7 @@ import com.kou.trigger.api.IRaffleStrategyService;
 import com.kou.trigger.api.dto.*;
 import com.kou.types.enums.ResponseCode;
 import com.kou.types.exception.AppException;
-import com.kou.types.model.Response;
+import com.kou.trigger.api.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboService;
