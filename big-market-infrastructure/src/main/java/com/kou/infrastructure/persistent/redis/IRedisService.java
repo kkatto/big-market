@@ -80,6 +80,13 @@ public interface IRedisService {
     Long getAtomicLong(String key);
 
     /**
+     * 获取值
+     *
+     * @param key   key 键
+     */
+    RAtomicLong getAtomic(String key);
+
+    /**
      * 自增 Key 的值；1、2、3、4
      *
      * @param key 键
@@ -267,4 +274,6 @@ public interface IRedisService {
     Boolean setNx(String lockKey);
 
     Boolean setNx(String key, long expired, TimeUnit timeUnit);
+
+    RRateLimiter getRateLimiter(String key);
 }

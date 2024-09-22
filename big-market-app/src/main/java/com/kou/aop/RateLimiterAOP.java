@@ -1,10 +1,12 @@
 package com.kou.aop;
 
+import com.kou.infrastructure.persistent.redis.IRedisService;
 import com.kou.types.annotations.DCCValue;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.RateLimiter;
 import com.kou.types.annotations.RateLimiterAccessInterceptor;
+import com.kou.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,12 +15,17 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.redisson.api.RAtomicLong;
 import org.redisson.api.RRateLimiter;
+import org.redisson.api.RateIntervalUnit;
+import org.redisson.api.RateType;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,6 +40,8 @@ public class RateLimiterAOP {
 
     @DCCValue("rateLimiterSwitch:close")
     private String rateLimiterSwitch;
+    @Resource
+    private IRedisService redisService;
 
     // 个人限频记录1分钟
     private final Cache<String, RateLimiter> loginRecord = CacheBuilder.newBuilder()
@@ -65,30 +74,42 @@ public class RateLimiterAOP {
         String keyAttr = getAttrValue(key, point.getArgs());
         log.info("aop attr {}", keyAttr);
 
+        String userBlackKey = Constants.RedisKey.USER_RATE_LIMITER_BLACK + keyAttr;
+        RAtomicLong userBlackValue = redisService.getAtomic(userBlackKey);
+
         // 黑名单拦截
-        if (!"all".equals(keyAttr) && 0 != rateLimiterAccessInterceptor.blacklistCount() && null != blacklist.getIfPresent(keyAttr) && blacklist.getIfPresent(keyAttr) > rateLimiterAccessInterceptor.blacklistCount()) {
-            log.info("限流-黑名单拦截(24h)：{}", keyAttr);
-            return fallbackMethodResult(point, rateLimiterAccessInterceptor.fallbackMethod());
+        if (!"all".equals(keyAttr) && 0 != rateLimiterAccessInterceptor.blacklistCount()) {
+            boolean existUserBlackValue = userBlackValue.isExists();
+
+            if (existUserBlackValue && userBlackValue.get() > rateLimiterAccessInterceptor.blacklistCount()) {
+                log.info("Redis-限流-黑名单拦截(24h)：{}", keyAttr);
+                return this.fallbackMethodResult(point, rateLimiterAccessInterceptor.fallbackMethod());
+            } else if (!existUserBlackValue){
+                userBlackValue.expire(Duration.ofHours(24));
+            }
         }
 
-        // 获取限流 -> Guava 缓存1分钟
-        RateLimiter rateLimiter = loginRecord.getIfPresent(keyAttr);
-        if (null == rateLimiter) {
-            rateLimiter = RateLimiter.create(rateLimiterAccessInterceptor.permitsPerSecond());
-            loginRecord.put(keyAttr, rateLimiter);
+        // 获取限流
+        RRateLimiter rateLimiter = redisService.getRateLimiter(keyAttr);
+        if (!rateLimiter.isExists()) {
+            /**
+             * 配置限流器
+             *
+             * 1. RateType.OVERALL: 表示全局限流，即所有客户端共享限流规则。RateType.PER_CLIENT: 表示每个客户端独立限流，即每个客户端都有自己的限流规则。
+             * 2. rateLimiterInterceptor.permitsPerSecond(): 为限流速率，即每秒允许的请求次数。
+             * 3. rateInterval: 表示限流时间间隔为1秒。
+             * 4. RateIntervalUnit.SECONDS: 表示限流时间单位为秒。
+             */
+            rateLimiter.trySetRate(RateType.OVERALL, rateLimiterAccessInterceptor.permitsPerSecond(), 1, RateIntervalUnit.SECONDS);
         }
 
         // 限流拦截
         if (!rateLimiter.tryAcquire()) {
             if (0 != rateLimiterAccessInterceptor.blacklistCount()) {
-                if (null == blacklist.getIfPresent(keyAttr)) {
-                    blacklist.put(keyAttr, 1L);
-                } else {
-                    blacklist.put(keyAttr, blacklist.getIfPresent(keyAttr) + 1L);
-                }
+                userBlackValue.incrementAndGet();
             }
-            log.info("限流-超频次拦截：{}", keyAttr);
-            return fallbackMethodResult(point, rateLimiterAccessInterceptor.fallbackMethod());
+            log.info("Redis-限流-超频次拦截：{}", keyAttr);
+            return this.fallbackMethodResult(point, rateLimiterAccessInterceptor.fallbackMethod());
         }
 
         // 返回结果

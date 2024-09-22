@@ -16,7 +16,7 @@ public @interface RateLimiterAccessInterceptor {
     String key() default "all";
 
     /** 限制频次（每秒请求次数）*/
-    double permitsPerSecond();
+    long permitsPerSecond();
 
     /** 黑名单拦截（多少次限制后加入黑名单）0 不限制 */
     double blacklistCount() default 0;

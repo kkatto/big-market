@@ -1,5 +1,7 @@
 package com.kou.types.common;
 
+import java.nio.channels.Pipe;
+
 public class Constants {
 
     public final static String SPLIT = ",";
@@ -27,6 +29,7 @@ public class Constants {
         public static String ACTIVITY_ACCOUNT_LOCK = "activity_account_lock_";
         public static String ACTIVITY_ACCOUNT_UPDATE_LOCK = "activity_account_update_lock_";
         public static String USER_CREDIT_ACCOUNT_LOCK = "user_credit_account_lock_";
+        public static String USER_RATE_LIMITER_BLACK = "user_rate_limiter_black_";
 
     }
 }
