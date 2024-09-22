@@ -30,7 +30,6 @@ public class DCCValueBeanFactory implements BeanPostProcessor {
     private static final String BASE_CONFIG_PATH = "/big-market-dcc";
     private static final String BASE_CONFIG_PATH_CONFIG = BASE_CONFIG_PATH + "/config";
 
-    @Resource
     private CuratorFramework client;
 
     private final Map<String, Object> dccObjMap = new HashMap<>();
