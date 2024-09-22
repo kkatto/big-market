@@ -653,8 +653,6 @@ public class ActivityRepository implements IActivityRepository {
         String lockKey = Constants.RedisKey.ACTIVITY_ACCOUNT_UPDATE_LOCK + deliveryOrderEntity.getUserId() + Constants.UNDERLINE + deliveryOrderEntity.getOutBusinessNo();
         RLock lock = redisService.getLock(lockKey);
         try {
-            lock.lock(3, TimeUnit.SECONDS);
-
             // 查询订单
             RaffleActivityOrder raffleActivityOrderReq = new RaffleActivityOrder();
             raffleActivityOrderReq.setUserId(deliveryOrderEntity.getUserId());
@@ -662,11 +660,10 @@ public class ActivityRepository implements IActivityRepository {
             RaffleActivityOrder raffleActivityOrderRes = raffleActivityOrderDao.queryRaffleActivityOrder(raffleActivityOrderReq);
 
             if (null == raffleActivityOrderRes) {
-                if (lock.isLocked()) {
-                    lock.unlock();
-                }
                 return;
             }
+
+            lock.lock(3, TimeUnit.SECONDS);
 
             // 账户对象 - 总
             RaffleActivityAccount raffleActivityAccount = new RaffleActivityAccount();
@@ -725,7 +722,7 @@ public class ActivityRepository implements IActivityRepository {
             });
         } finally {
             dbRouterStrategy.clear();
-            if (lock.isLocked()) {
+            if (lock.isLocked() && lock.isHeldByCurrentThread()) {
                 lock.unlock();
             }
         }
