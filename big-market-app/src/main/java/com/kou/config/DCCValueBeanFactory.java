@@ -28,7 +28,6 @@ public class DCCValueBeanFactory implements BeanPostProcessor {
     private static final String BASE_CONFIG_PATH = "/big-market-dcc";
     private static final String BASE_CONFIG_PATH_CONFIG = BASE_CONFIG_PATH + "/config";
 
-    @Resource
     private CuratorFramework client;
 
     private final Map<String, Object> dccObjMap = new HashMap<>();
@@ -40,7 +39,8 @@ public class DCCValueBeanFactory implements BeanPostProcessor {
      * 当节点变化时（如配置值更改），会根据路径从dccObjGroup中找到相应的bean，并更新bean中的字段值。
      * @throws Exception
      */
-    public DCCValueBeanFactory() throws Exception {
+    public DCCValueBeanFactory(CuratorFramework client) throws Exception {
+        this.client = client;
         
         // 节点判断
         if (null == client.checkExists().forPath(BASE_CONFIG_PATH_CONFIG)) {
