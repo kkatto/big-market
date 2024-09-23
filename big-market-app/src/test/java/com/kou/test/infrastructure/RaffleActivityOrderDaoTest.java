@@ -1,8 +1,8 @@
 package com.kou.test.infrastructure;
 
 import com.alibaba.fastjson.JSON;
-import com.kou.infrastructure.persistent.dao.IRaffleActivityOrderDao;
-import com.kou.infrastructure.persistent.po.RaffleActivityOrder;
+import com.kou.infrastructure.dao.IRaffleActivityOrderDao;
+import com.kou.infrastructure.dao.po.RaffleActivityOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.RandomStringUtils;
 import org.jeasy.random.EasyRandom;

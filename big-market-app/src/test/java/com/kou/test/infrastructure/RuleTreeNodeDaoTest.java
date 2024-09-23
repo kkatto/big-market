@@ -1,8 +1,8 @@
 package com.kou.test.infrastructure;
 
 import com.alibaba.fastjson.JSON;
-import com.kou.infrastructure.persistent.dao.IRuleTreeNodeDao;
-import com.kou.infrastructure.persistent.po.RuleTreeNode;
+import com.kou.infrastructure.dao.IRuleTreeNodeDao;
+import com.kou.infrastructure.dao.po.RuleTreeNode;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

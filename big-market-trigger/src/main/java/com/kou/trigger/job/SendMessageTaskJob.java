@@ -1,13 +1,11 @@
 package com.kou.trigger.job;
 
 import com.kou.domain.task.model.entity.TaskEntity;
-import com.kou.domain.task.repository.ITaskRepository;
 import com.kou.domain.task.service.ITaskService;
-import com.kou.middleware.db.router.strategy.IDBRouterStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import sun.nio.ch.ThreadPool;
+import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 
 import javax.annotation.Resource;
 import java.util.List;

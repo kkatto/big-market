@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.kou.domain.strategy.model.valobj.RuleTreeVO;
 import com.kou.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 import com.kou.domain.strategy.repository.IStrategyRepository;
-import com.kou.infrastructure.persistent.redis.IRedisService;
+import com.kou.infrastructure.redis.IRedisService;
 import com.kou.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

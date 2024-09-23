@@ -1,6 +1,6 @@
 package com.kou.aop;
 
-import com.kou.infrastructure.persistent.redis.IRedisService;
+import com.kou.infrastructure.redis.IRedisService;
 import com.kou.types.annotations.DCCValue;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
