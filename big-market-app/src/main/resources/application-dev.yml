@@ -32,6 +32,9 @@ spring:
   elasticsearch.datasource:
     driverClassName: org.elasticsearch.xpack.sql.jdbc.EsDriver
     url: jdbc:es://http://192.168.10.129:9200
+  cloud:
+    zookeeper:
+      enabled: false
 
 # 线程池配置
 thread:
@@ -137,6 +140,8 @@ dubbo:
 zookeeper:
   sdk:
     config:
+      # 状态；true = 开启、false 关闭
+      enable: true
       connect-string: 192.168.10.129:2181
       base-sleep-time-ms: 1000
       max-retries: 3
