@@ -90,6 +90,11 @@ public interface IStrategyRepository {
     StrategyAwardStockKeyVO takeQueueValue();
 
     /**
+     * 获取奖品库存消费队列
+     */
+    StrategyAwardStockKeyVO takeQueueValue(Long strategyId, Integer awardId);
+
+    /**
      * 更新奖品库存消耗
      *
      * @param strategyId 策略ID
@@ -148,4 +153,10 @@ public interface IStrategyRepository {
      */
     List<RuleWeightVO> queryAwardRuleWeight(Long strategyId);
 
+    /**
+     * 查询有效活动的奖品配置
+     *
+     * @return 奖品配置列表
+     */
+    List<StrategyAwardStockKeyVO> queryOpenActivityStrategyAwardList();
 }
