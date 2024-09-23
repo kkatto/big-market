@@ -49,8 +49,8 @@ public class DataSourceConfig {
         public SqlSessionFactory mysqlSqlSessionFactory(DataSource mysqlDataSource, Interceptor dbRouterDynamicMybatisPlugin) throws Exception {
             SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
             factoryBean.setDataSource(mysqlDataSource);
-            factoryBean.setPlugins(dbRouterDynamicMybatisPlugin);
             factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:/mybatis/mapper/mysql/*.xml"));
+            factoryBean.setPlugins(dbRouterDynamicMybatisPlugin);
             return factoryBean.getObject();
         }
 
