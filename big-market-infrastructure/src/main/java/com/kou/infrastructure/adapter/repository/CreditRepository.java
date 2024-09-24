@@ -127,7 +127,7 @@ public class CreditRepository implements ICreditRepository {
             });
         } finally {
             dbRouterStrategy.clear();
-            if (lock.isLocked()) {
+            if (lock.isLocked() && lock.isHeldByCurrentThread()) {
                 lock.unlock();
             }
         }

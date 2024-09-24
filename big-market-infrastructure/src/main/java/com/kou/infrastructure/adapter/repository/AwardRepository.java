@@ -180,7 +180,9 @@ public class AwardRepository implements IAwardRepository {
             });
         } finally {
             dbRouterStrategy.clear();
-            lock.unlock();
+            if (lock.isLocked() && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
         }
 
     }
