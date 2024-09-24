@@ -4,6 +4,7 @@ import com.kou.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 import com.kou.domain.strategy.service.IRaffleAward;
 import com.kou.domain.strategy.service.IRaffleStock;
 import com.xxl.job.core.handler.annotation.XxlJob;
+import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -39,7 +40,8 @@ public class UpdateAwardStockJob {
      * 本地化任务注解；@Scheduled(cron = "0/5 * * * * ?")
      * 分布式任务注解； @XxlJob("updateAwardStockJob")
      */
-    @XxlJob("updateAwardStockJob")
+    @Timed(value = "updateAwardStockJob", description = "更新奖品库存任务")
+    @XxlJob("UpdateAwardStockJob")
     public void exec() {
         // 为什么加锁？分布式应用N台机器部署互备，任务调度会有N个同时执行，那么这里需要增加抢占机制，谁抢占到谁就执行。完毕后，下一轮继续抢占。
         RLock lock = redissonClient.getLock("big-market-updateAwardStockJob");
