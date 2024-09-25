@@ -7,13 +7,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 /**
  * @author KouJY
  * Date: 2024/9/21 11:27
  * Package: com.kou.config
  */
-@Configuration
+@Order(1)
+@Configuration("zookeeperClientConfig")
 @EnableConfigurationProperties(ZookeeperClientConfigProperties.class)
 public class ZooKeeperClientConfig {
 
