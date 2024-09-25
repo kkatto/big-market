@@ -9,20 +9,20 @@ services:
     environment:
       TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: 12345
-    networks:
-      - my-network
-    depends_on:
-      - mysql-job-dbdata
     ports:
       - "13306:3306"
     volumes:
       - ./mysql/sql:/docker-entrypoint-initdb.d
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf/my.cnf:/etc/mysql/conf.d/mysql.cnf:ro
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       interval: 5s
       timeout: 10s
       retries: 10
       start_period: 15s
+    networks:
+      - my-network
     volumes_from:
       - mysql-job-dbdata
 
@@ -43,7 +43,8 @@ services:
     ports:
       - 16379:6379
     volumes:
-      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/data:/data
     command: redis-server /usr/local/etc/redis/redis.conf
     networks:
       - my-network
@@ -57,7 +58,7 @@ services:
   # 账密 admin/admin
   # rabbitmq-plugins enable rabbitmq_management
   rabbitmq:
-    image: rabbitmq:3.12.9
+    image: rabbitmq:3.9.20-management
     container_name: rabbitmq
     restart: always
     ports:
@@ -68,7 +69,9 @@ services:
       RABBITMQ_DEFAULT_PASS: admin
     command: rabbitmq-server
     volumes:
-      - ./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
+      - ./rabbitmq/etc/enabled_plugins:/etc/rabbitmq/enabled_plugins
+      - ./rabbitmq/data:/var/lib/rabbitmq #挂载 RabbitMQ数据
+
 
 networks:
   my-network:
