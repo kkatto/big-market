@@ -1,3 +1,1 @@
-# xfg-frame-archetype - DDD 脚手架
-
-aaa
+# big-market 大营销系统
