@@ -97,12 +97,21 @@
         <appender-ref ref="ERROR_FILE"/>
     </appender>
 
+    <appender name="CUSTOM" class="com.kou.monitor.sdk.appender.BehaviorMonitorAppender">
+        <systemName>big-market</systemName>
+        <groupId>com.kou</groupId>
+        <host>192.168.10.129</host>
+        <port>16379</port>
+    </appender>
+
     <!-- 开发环境：控制台打印 -->
     <springProfile name="dev">
         <logger name="com.nmys.view" level="debug"/>
     </springProfile>
 
     <root level="info">
+        <appender-ref ref="CUSTOM"/>
+
         <appender-ref ref="CONSOLE"/>
         <!-- 异步日志-INFO -->
         <appender-ref ref="ASYNC_FILE_INFO"/>
