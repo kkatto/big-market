@@ -100,8 +100,9 @@
     <appender name="CUSTOM" class="com.kou.monitor.sdk.appender.BehaviorMonitorAppender">
         <systemName>big-market</systemName>
         <groupId>com.kou</groupId>
-        <host>192.168.10.129</host>
+        <host>14.103.177.146</host>
         <port>16379</port>
+        <password>gannima0.++-</password>
     </appender>
 
     <!-- 开发环境：控制台打印 -->

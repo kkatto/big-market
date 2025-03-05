@@ -107,8 +107,9 @@ mybatis:
 redis:
   sdk:
     config:
-      host: 192.168.10.129
+      host: 14.103.177.146
       port: 16379
+      password: gannima0.++-
       pool-size: 10
       min-idle-size: 5
       idle-timeout: 30000
