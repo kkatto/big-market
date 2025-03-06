@@ -6,10 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author KouJY
@@ -51,7 +48,7 @@ public class StrategyRuleEntity {
             return null;
         }
         String[] ruleValueMaps = this.ruleValue.split(Constants.SPACE);
-        Map<String, List<Integer>> resultMap = new HashMap<>();
+        Map<String, List<Integer>> resultMap = new LinkedHashMap<>();
 
         for (String ruleValueMap : ruleValueMaps) {
             // 检查是否为空
